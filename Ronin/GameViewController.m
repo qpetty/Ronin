@@ -9,7 +9,8 @@
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
 
-#import "Character.h"
+#import "Hero.h"
+#import "Enemy.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -89,6 +90,7 @@ GLfloat gCubeVertexData[216] =
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
+    Hero *hero;
     NSMutableArray *allEnemies;
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -124,11 +126,14 @@ GLfloat gCubeVertexData[216] =
     UIPanGestureRecognizer *panning = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
     [view addGestureRecognizer:panning];
     
-    srand48(time(0));
+    hero = [[Hero alloc] init];
+    hero.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
+    
+    srand((unsigned int)time(0));
     allEnemies = [[NSMutableArray alloc] init];
-    for (NSUInteger i = 0; i < 4; i++) {
-        Character *en = [[Character alloc] init];
-        en.location = GLKVector3Make(drand48() * 2.0 - 1.0, drand48() * 2.5, -5.0f);
+    for (NSUInteger i = 0; i < 1; i++) {
+        Enemy *en = [[Enemy alloc] initWithDepth:-5.0];
+        en.target = hero;
         [allEnemies addObject:en];
     }
     
@@ -172,12 +177,6 @@ GLfloat gCubeVertexData[216] =
     
     [self loadShaders];
     
-    /*
-    self.effect = [[GLKBaseEffect alloc] init];
-    self.effect.light0.enabled = GL_TRUE;
-    self.effect.light0.diffuseColor = GLKVector4Make(1.0f, 0.4f, 0.4f, 1.0f);
-    */
-    
     glEnable(GL_DEPTH_TEST);
     
     glGenVertexArraysOES(1, &_vertexArray);
@@ -215,34 +214,9 @@ GLfloat gCubeVertexData[216] =
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     _projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
-    //self.effect.transform.projectionMatrix = projectionMatrix;
-    
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(_translation.x, _translation.y, -5.0f);
-    
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 0.0f, 1.0f);
-    
-    //baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
-    
-    // Compute the model view matrix for the object rendered with ES2
-    //GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.5f);
-    //GLKMatrix4 modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 1.0f, 0.0f);
-    //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 0.0f, 0.1f, 0.0f);
-    
-    //modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 1.0f, 0.0f);
-    //modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.0f, 0.0f, -2.5f);
-    
-    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
-    
-    //modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.5f, 0.2f, 0.3f);
-    
-    
-    modelViewMatrix = baseModelViewMatrix;
-    
-    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
-    
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, modelViewMatrix);
-    
-    //_rotation += self.timeSinceLastUpdate * 0.5f;
+    for (Enemy *en in allEnemies) {
+        [en update];
+    }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -252,25 +226,24 @@ GLfloat gCubeVertexData[216] =
     
     glBindVertexArrayOES(_vertexArray);
     
-    // Render the object with GLKit
-    //[self.effect prepareToDraw];
-    
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
-    
     // Render the object again with ES2
     glUseProgram(_program);
     
-    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
-    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
+    GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
+    
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, hero.normalMatrix.m);
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     
-    for (Character *en in allEnemies) {
-        GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
-        
-        glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
-        glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, en.normalMatrix.m);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+    for (Enemy *en in allEnemies) {
+        if (en.isVisible) {
+            mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
+            
+            glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
+            glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, en.normalMatrix.m);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
     }
 }
 
@@ -286,12 +259,15 @@ GLfloat gCubeVertexData[216] =
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer*)sender;
         UIView *viewOfTrans = sender.view;
         
+        GLKVector3 heroLocation = hero.location;
         GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan translationInView:viewOfTrans]
                                                           ofView:sender.view
                                             withProjectionMatrix:_projectionMatrix
-                                                        andDepth:5.0];
+                                                        andDepth:-heroLocation.z];
         
-        _translation = CGPointMake(_translation.x + point.x, _translation.y - point.y);
+        heroLocation.x += point.x;
+        heroLocation.y -= point.y;
+        hero.location = heroLocation;
         
         [pan setTranslation:CGPointMake(0.0f, 0.0f) inView:viewOfTrans];
         NSLog(@"translation (%f, %f)", _translation.x, _translation.y);

@@ -13,8 +13,11 @@
 @interface Character : NSObject
 
 @property GLKVector3 location;
+@property BOOL isVisible;
 
 @property (nonatomic) GLKMatrix4 modelMatrix;
 @property (nonatomic) GLKMatrix3 normalMatrix;
+
+- (void)update;
 
 @end

@@ -17,6 +17,8 @@
 		5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */; };
 		5A1EB0681A34D37200DBD03B /* RoninTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB0671A34D37200DBD03B /* RoninTests.m */; };
 		5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB07C1A3514FE00DBD03B /* Character.m */; };
+		5A1EB08A1A35890200DBD03B /* Hero.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB0891A35890200DBD03B /* Hero.m */; };
+		5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB08C1A35891A00DBD03B /* Enemy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,11 @@
 		5A1EB0671A34D37200DBD03B /* RoninTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RoninTests.m; sourceTree = "<group>"; };
 		5A1EB07B1A3514FE00DBD03B /* Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Character.h; sourceTree = "<group>"; };
 		5A1EB07C1A3514FE00DBD03B /* Character.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Character.m; sourceTree = "<group>"; };
+		5A1EB0881A35890200DBD03B /* Hero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hero.h; sourceTree = "<group>"; };
+		5A1EB0891A35890200DBD03B /* Hero.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hero.m; sourceTree = "<group>"; };
+		5A1EB08B1A35891A00DBD03B /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
+		5A1EB08C1A35891A00DBD03B /* Enemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enemy.m; sourceTree = "<group>"; };
+		5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Ronin-Prefix.pch"; path = "../Ronin-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +103,10 @@
 				5A1EB0531A34D37200DBD03B /* GameViewController.m */,
 				5A1EB07B1A3514FE00DBD03B /* Character.h */,
 				5A1EB07C1A3514FE00DBD03B /* Character.m */,
+				5A1EB0881A35890200DBD03B /* Hero.h */,
+				5A1EB0891A35890200DBD03B /* Hero.m */,
+				5A1EB08B1A35891A00DBD03B /* Enemy.h */,
+				5A1EB08C1A35891A00DBD03B /* Enemy.m */,
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
@@ -125,6 +136,7 @@
 		5A1EB0651A34D37200DBD03B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */,
 				5A1EB0661A34D37200DBD03B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -232,6 +244,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */,
+				5A1EB08A1A35890200DBD03B /* Hero.m in Sources */,
 				5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */,
 				5A1EB04D1A34D37200DBD03B /* AppDelegate.m in Sources */,
 				5A1EB0541A34D37200DBD03B /* GameViewController.m in Sources */,
@@ -359,6 +373,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ronin-Prefix.pch";
 				INFOPLIST_FILE = Ronin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -369,6 +385,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ronin-Prefix.pch";
 				INFOPLIST_FILE = Ronin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
