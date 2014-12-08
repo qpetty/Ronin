@@ -16,6 +16,7 @@
 		5A1EB0591A34D37200DBD03B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A1EB0581A34D37200DBD03B /* Images.xcassets */; };
 		5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */; };
 		5A1EB0681A34D37200DBD03B /* RoninTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB0671A34D37200DBD03B /* RoninTests.m */; };
+		5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB07C1A3514FE00DBD03B /* Character.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,8 @@
 		5A1EB0611A34D37200DBD03B /* RoninTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoninTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A1EB0661A34D37200DBD03B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A1EB0671A34D37200DBD03B /* RoninTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RoninTests.m; sourceTree = "<group>"; };
+		5A1EB07B1A3514FE00DBD03B /* Character.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Character.h; sourceTree = "<group>"; };
+		5A1EB07C1A3514FE00DBD03B /* Character.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Character.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,8 @@
 				5A1EB0501A34D37200DBD03B /* Shader.vsh */,
 				5A1EB0521A34D37200DBD03B /* GameViewController.h */,
 				5A1EB0531A34D37200DBD03B /* GameViewController.m */,
+				5A1EB07B1A3514FE00DBD03B /* Character.h */,
+				5A1EB07C1A3514FE00DBD03B /* Character.m */,
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
@@ -227,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */,
 				5A1EB04D1A34D37200DBD03B /* AppDelegate.m in Sources */,
 				5A1EB0541A34D37200DBD03B /* GameViewController.m in Sources */,
 				5A1EB04A1A34D37200DBD03B /* main.m in Sources */,

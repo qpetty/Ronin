@@ -9,6 +9,8 @@
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
 
+#import "Character.h"
+
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 // Uniform index.
@@ -32,47 +34,47 @@ GLfloat gCubeVertexData[216] =
 {
     // Data layout for each line below is:
     // positionX, positionY, positionZ,     normalX, normalY, normalZ,
-    0.5f, -0.5f, -0.5f,        1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,          1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
+    0.5f, 0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    -0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
     
-    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
-    
-    -0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
-    
-    -0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
-    
-    0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
-    
-    0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
+//    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
+//    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
+//    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
+//    
+//    -0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
+//    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
+//    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
+//    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
+//    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
+//    -0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
+//    
+//    -0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
+//    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
+//    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
+//    
+//    0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
+//    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
+//    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
+//    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
+//    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
+//    -0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
+//    
+//    0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
+//    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
+//    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
+//    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
+//    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
+//    -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
 };
 
 @interface GameViewController () {
@@ -80,13 +82,16 @@ GLfloat gCubeVertexData[216] =
     
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
+    GLKMatrix4 _projectionMatrix;
     float _rotation;
+    CGPoint _translation;
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    
+    NSMutableArray *allEnemies;
 }
 @property (strong, nonatomic) EAGLContext *context;
-@property (strong, nonatomic) GLKBaseEffect *effect;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -112,6 +117,20 @@ GLfloat gCubeVertexData[216] =
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    
+    UIRotationGestureRecognizer *rotation = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
+    [view addGestureRecognizer:rotation];
+    
+    UIPanGestureRecognizer *panning = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
+    [view addGestureRecognizer:panning];
+    
+    srand48(time(0));
+    allEnemies = [[NSMutableArray alloc] init];
+    for (NSUInteger i = 0; i < 4; i++) {
+        Character *en = [[Character alloc] init];
+        en.location = GLKVector3Make(drand48() * 2.0 - 1.0, drand48() * 2.5, -5.0f);
+        [allEnemies addObject:en];
+    }
     
     [self setupGL];
 }
@@ -153,9 +172,11 @@ GLfloat gCubeVertexData[216] =
     
     [self loadShaders];
     
+    /*
     self.effect = [[GLKBaseEffect alloc] init];
     self.effect.light0.enabled = GL_TRUE;
     self.effect.light0.diffuseColor = GLKVector4Make(1.0f, 0.4f, 0.4f, 1.0f);
+    */
     
     glEnable(GL_DEPTH_TEST);
     
@@ -181,8 +202,6 @@ GLfloat gCubeVertexData[216] =
     glDeleteBuffers(1, &_vertexBuffer);
     glDeleteVertexArraysOES(1, &_vertexArray);
     
-    self.effect = nil;
-    
     if (_program) {
         glDeleteProgram(_program);
         _program = 0;
@@ -194,30 +213,36 @@ GLfloat gCubeVertexData[216] =
 - (void)update
 {
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+    _projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
-    self.effect.transform.projectionMatrix = projectionMatrix;
+    //self.effect.transform.projectionMatrix = projectionMatrix;
     
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
-    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
+    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(_translation.x, _translation.y, -5.0f);
     
-    // Compute the model view matrix for the object rendered with GLKit
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
-    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 0.0f, 1.0f);
     
-    self.effect.transform.modelviewMatrix = modelViewMatrix;
+    //baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
     
     // Compute the model view matrix for the object rendered with ES2
-    modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 1.5f);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
+    //GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.5f);
+    //GLKMatrix4 modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 1.0f, 0.0f);
+    //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 0.0f, 0.1f, 0.0f);
+    
+    //modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.0f, 1.0f, 0.0f);
+    //modelViewMatrix = GLKMatrix4Translate(modelViewMatrix, 0.0f, 0.0f, -2.5f);
+    
     modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    
+    //modelViewMatrix = GLKMatrix4MakeRotation(_rotation, 0.5f, 0.2f, 0.3f);
+    
+    
+    modelViewMatrix = baseModelViewMatrix;
     
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
     
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    _modelViewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, modelViewMatrix);
     
-    _rotation += self.timeSinceLastUpdate * 0.5f;
+    //_rotation += self.timeSinceLastUpdate * 0.5f;
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -228,9 +253,9 @@ GLfloat gCubeVertexData[216] =
     glBindVertexArrayOES(_vertexArray);
     
     // Render the object with GLKit
-    [self.effect prepareToDraw];
+    //[self.effect prepareToDraw];
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
     
     // Render the object again with ES2
     glUseProgram(_program);
@@ -238,7 +263,56 @@ GLfloat gCubeVertexData[216] =
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    for (Character *en in allEnemies) {
+        GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
+        
+        glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
+        glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, en.normalMatrix.m);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+}
+
+#pragma mark Gesture Callbacks
+
+- (void)userInteractionEvent:(UIGestureRecognizer*)sender {
+    NSLog(@"sender: %@", sender);
+    
+    if ([sender isKindOfClass:[UIRotationGestureRecognizer class]]) {
+        UIRotationGestureRecognizer *rot = (UIRotationGestureRecognizer*)sender;
+        _rotation = -rot.rotation;
+    } else if ([sender isKindOfClass:[UIPanGestureRecognizer class]]) {
+        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer*)sender;
+        UIView *viewOfTrans = sender.view;
+        
+        GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan translationInView:viewOfTrans]
+                                                          ofView:sender.view
+                                            withProjectionMatrix:_projectionMatrix
+                                                        andDepth:5.0];
+        
+        _translation = CGPointMake(_translation.x + point.x, _translation.y - point.y);
+        
+        [pan setTranslation:CGPointMake(0.0f, 0.0f) inView:viewOfTrans];
+        NSLog(@"translation (%f, %f)", _translation.x, _translation.y);
+    }
+}
+
+-(GLKVector4)pointInModelSpaceForScreenPoint:(CGPoint)point ofView:(UIView*)view withProjectionMatrix:(GLKMatrix4)projMatrix andDepth:(float)depth {
+    bool invertable;
+    GLKVector4 normalizedPoint = GLKVector4Make(point.x / (view.frame.size.width / 2.0),
+                                                point.y / (view.frame.size.height / 2.0),
+                                                0.0f,
+                                                1.0f);
+    
+    normalizedPoint = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(projMatrix, &invertable), normalizedPoint);
+    if (invertable == NO) {
+        normalizedPoint = GLKVector4Make(0.0f, 0.0f, 0.0f, 0.0f);
+    } else {
+        normalizedPoint.x += normalizedPoint.x * depth;
+        normalizedPoint.y += normalizedPoint.y * depth;
+    }
+    return normalizedPoint;
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation
