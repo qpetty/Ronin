@@ -11,8 +11,9 @@
 @interface Enemy : Character
 
 @property Character *target;
+@property NSUInteger spawnDelay;
 
 -(instancetype)initWithDepth:(float)depth;
--(void)hitAt:(GLKVector4)hitPoint;
+-(BOOL)hitEnemyAt:(GLKVector4)hitPoint;
 
 @end

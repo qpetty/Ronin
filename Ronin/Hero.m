@@ -8,12 +8,15 @@
 
 #import "Hero.h"
 
+#define HERO_STARTING_HEALTH 3
+
 @implementation Hero
 
 -(instancetype)init {
     self = [super init];
     if (self) {
-        self.diffuseColor = GLKVector4Make(0.4f, 0.4f, 1.0f, 1.0f);
+        self.diffuseColor = GLKVector4Make(0.4f, 0.6f, 0.4f, 1.0f);
+        self.health = self.maxHealth = HERO_STARTING_HEALTH;
     }
     return self;
 }

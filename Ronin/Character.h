@@ -12,8 +12,8 @@
 
 @interface Character : NSObject
 
-@property NSUInteger health;
-@property NSUInteger maxHealth;
+@property NSInteger health;
+@property NSInteger maxHealth;
 
 @property GLKVector3 location;
 @property BOOL isVisible;

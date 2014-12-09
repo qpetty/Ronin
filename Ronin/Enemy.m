@@ -25,24 +25,31 @@
     self.location = [self spawnLocation:self.location.z];
     self.health = self.maxHealth = RANDOM_NUMBER_0_TO(MAX_HEALTH) + 1;
     
-    float oneRandom = RANDOM_NUMBER_0_TO(2);
-    
-    if (oneRandom == 0) {
-        self.diffuseColor = GLKVector4Make(1.0f, 0.0f, 0.0f, 1.0f);
-    } else if (oneRandom == 1) {
-        self.diffuseColor = GLKVector4Make(0.0f, 1.0f, 0.0f, 1.0f);
-    } else if (oneRandom == 2) {
+    if (self.health == 1) {
         self.diffuseColor = GLKVector4Make(0.0f, 0.0f, 1.0f, 1.0f);
+    } else if (self.health == 2) {
+        self.diffuseColor = GLKVector4Make(0.0f, 1.0f, 0.0f, 1.0f);
+    } else if (self.health == 3) {
+        self.diffuseColor = GLKVector4Make(1.0f, 0.0f, 0.0f, 1.0f);
     }
     
     self.isVisible = YES;
 }
 
+-(void)dead {
+    self.spawnDelay = RANDOM_NUMBER_0_TO(200);
+    self.isVisible = NO;
+}
+
 -(void)update {
-    float step = 0.005;
+    float step = 0.01;
     
-    if (self.isVisible == NO) {
+    if (self.isVisible == NO && self.spawnDelay == 0) {
         [self respawn];
+        return;
+    } else if (self.isVisible == NO) {
+        self.spawnDelay--;
+        return;
     }
     
     GLKVector3 dir = GLKVector3Subtract(self.target.location, self.location);
@@ -51,19 +58,23 @@
     
     self.location = GLKVector3Add(self.location, dir);
     
-
     if (fabsf(self.location.x - self.target.location.x) <= 0.06 && fabsf(self.location.y - self.target.location.y) <= 0.06) {
-        self.isVisible = NO;
+        self.target.health--;
+        [self dead];
     }
 }
 
 -(GLKVector3)spawnLocation:(float)depth {
-    //return GLKVector3Make(0.0f, 0.0f, depth);
     float oneRandom = RANDOM_NUMBER_NEG1_TO_1 * M_PI;
     return GLKVector3Make(2.0 * cosf(oneRandom), 2.0 * sinf(oneRandom), depth);
 }
 
--(void)hitAt:(GLKVector4)hitPoint {
+-(BOOL)hitEnemyAt:(GLKVector4)hitPoint {
+    
+    if (self.isVisible == NO) {
+        return NO;
+    }
+    
     hitPoint.z = hitPoint.w = 0.0f;
     GLKVector4 middleOfSelf = GLKVector4Make(self.location.x, self.location.y, 0.0f, 0.0f);
     //NSLog(@"location: (%f, %f, %f, %f)", middleOfSelf.x, middleOfSelf.y, middleOfSelf.z, middleOfSelf.w);
@@ -73,10 +84,12 @@
         
         self.diffuseColor = GLKVector4MultiplyScalar(self.diffuseColor, 1.0 / (float)self.maxHealth);
         if (--self.health == 0) {
-            self.isVisible = NO;
+            [self dead];
         }
         NSLog(@"Enemy: %@ hit!", self);
     }
+    
+    return !self.isVisible;
 }
 
 -(NSString *)description {

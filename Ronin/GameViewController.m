@@ -95,6 +95,7 @@ GLfloat gCubeVertexData[216] =
     
     Hero *hero;
     NSMutableArray *allEnemies;
+    NSUInteger enemiesKilled;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -129,18 +130,33 @@ GLfloat gCubeVertexData[216] =
     UIPanGestureRecognizer *panning = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
     [view addGestureRecognizer:panning];
     
+    [self setupGL];
+}
+
+-(void)setupGame {
     hero = [[Hero alloc] init];
     hero.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
     
     srand((unsigned int)time(0));
     allEnemies = [[NSMutableArray alloc] init];
-    for (NSUInteger i = 0; i < 3; i++) {
+    for (NSUInteger i = 0; i < 6; i++) {
         Enemy *en = [[Enemy alloc] initWithDepth:-5.0];
         en.target = hero;
         [allEnemies addObject:en];
     }
-    
-    [self setupGL];
+    enemiesKilled = 0;
+    [self updateHUD];
+}
+
+-(IBAction)startGame:(id)sender {
+    [self setupGame];
+    self.startButton.hidden = YES;
+    self.paused = NO;
+}
+
+-(void)gameOver {
+    self.startButton.hidden = NO;
+    self.paused = YES;
 }
 
 - (void)dealloc
@@ -210,6 +226,12 @@ GLfloat gCubeVertexData[216] =
     }
 }
 
+#pragma mark - UIStuff
+
+-(void)updateHUD {
+    self.highScore.text = [NSString stringWithFormat:@"Score: %lu", enemiesKilled];
+}
+
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update
@@ -219,6 +241,10 @@ GLfloat gCubeVertexData[216] =
     
     for (Enemy *en in allEnemies) {
         [en update];
+    }
+    
+    if (hero.health <= 0) {
+        [self gameOver];
     }
 }
 
@@ -258,6 +284,10 @@ GLfloat gCubeVertexData[216] =
 - (void)userInteractionEvent:(UIGestureRecognizer*)sender {
     //NSLog(@"sender: %@", sender);
     
+    if (self.paused == YES) {
+        return;
+    }
+    
     if ([sender isKindOfClass:[UIRotationGestureRecognizer class]]) {
         UIRotationGestureRecognizer *rot = (UIRotationGestureRecognizer*)sender;
         _rotation = -rot.rotation;
@@ -288,7 +318,11 @@ GLfloat gCubeVertexData[216] =
             GLKVector4 hitPoint = GLKVector4Add(beginningTouch, dir);
             
             for (Enemy *oneEnemy in allEnemies) {
-                [oneEnemy hitAt:hitPoint];
+
+                if ([oneEnemy hitEnemyAt:hitPoint] == YES) {
+                    enemiesKilled++;
+                    [self updateHUD];
+                }
             }
             //NSLog(@"endTouch: (%f, %f, %f, %f)", point.x, point.y, point.z, point.w);
         }
