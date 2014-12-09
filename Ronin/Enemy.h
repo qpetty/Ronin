@@ -13,5 +13,6 @@
 @property Character *target;
 
 -(instancetype)initWithDepth:(float)depth;
+-(void)hitAt:(GLKVector4)hitPoint;
 
 @end

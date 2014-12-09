@@ -90,6 +90,8 @@ GLfloat gCubeVertexData[216] =
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
+    GLKVector4 beginningTouch;
+    
     Hero *hero;
     NSMutableArray *allEnemies;
 }
@@ -131,7 +133,7 @@ GLfloat gCubeVertexData[216] =
     
     srand((unsigned int)time(0));
     allEnemies = [[NSMutableArray alloc] init];
-    for (NSUInteger i = 0; i < 1; i++) {
+    for (NSUInteger i = 0; i < 3; i++) {
         Enemy *en = [[Enemy alloc] initWithDepth:-5.0];
         en.target = hero;
         [allEnemies addObject:en];
@@ -250,7 +252,7 @@ GLfloat gCubeVertexData[216] =
 #pragma mark Gesture Callbacks
 
 - (void)userInteractionEvent:(UIGestureRecognizer*)sender {
-    NSLog(@"sender: %@", sender);
+    //NSLog(@"sender: %@", sender);
     
     if ([sender isKindOfClass:[UIRotationGestureRecognizer class]]) {
         UIRotationGestureRecognizer *rot = (UIRotationGestureRecognizer*)sender;
@@ -258,26 +260,43 @@ GLfloat gCubeVertexData[216] =
     } else if ([sender isKindOfClass:[UIPanGestureRecognizer class]]) {
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer*)sender;
         UIView *viewOfTrans = sender.view;
-        
         GLKVector3 heroLocation = hero.location;
-        GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan translationInView:viewOfTrans]
-                                                          ofView:sender.view
-                                            withProjectionMatrix:_projectionMatrix
-                                                        andDepth:-heroLocation.z];
         
-        heroLocation.x += point.x;
-        heroLocation.y -= point.y;
-        hero.location = heroLocation;
-        
-        [pan setTranslation:CGPointMake(0.0f, 0.0f) inView:viewOfTrans];
-        NSLog(@"translation (%f, %f)", _translation.x, _translation.y);
+        if (sender.state == UIGestureRecognizerStateBegan) {
+            //NSLog(@"began touches: %@", [NSThread isMainThread] ? @"YES" : @"NO");
+            
+            beginningTouch = [self pointInModelSpaceForScreenPoint:[pan locationInView:viewOfTrans]
+                                                            ofView:sender.view
+                                              withProjectionMatrix:_projectionMatrix
+                                                          andDepth:-heroLocation.z];
+
+            //NSLog(@"beginningTouch: (%f, %f, %f, %f)", beginningTouch.x, beginningTouch.y, beginningTouch.z, beginningTouch.w);
+        } else if (sender.state == UIGestureRecognizerStateEnded) {
+            //NSLog(@"ended touches");
+            
+            GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan locationInView:viewOfTrans]
+                                                              ofView:sender.view
+                                                withProjectionMatrix:_projectionMatrix
+                                                            andDepth:-heroLocation.z];
+            
+            GLKVector4 dir = GLKVector4Subtract(point, beginningTouch);
+            dir = GLKVector4DivideScalar(dir, 2.0f);
+            GLKVector4 hitPoint = GLKVector4Add(beginningTouch, dir);
+            
+            for (Enemy *oneEnemy in allEnemies) {
+                [oneEnemy hitAt:hitPoint];
+            }
+            //NSLog(@"endTouch: (%f, %f, %f, %f)", point.x, point.y, point.z, point.w);
+        }
     }
 }
 
 -(GLKVector4)pointInModelSpaceForScreenPoint:(CGPoint)point ofView:(UIView*)view withProjectionMatrix:(GLKMatrix4)projMatrix andDepth:(float)depth {
     bool invertable;
-    GLKVector4 normalizedPoint = GLKVector4Make(point.x / (view.frame.size.width / 2.0),
-                                                point.y / (view.frame.size.height / 2.0),
+    //x2 = (2/w)x1 - 1
+    //y2 = (-2/h)y1 + 1
+    GLKVector4 normalizedPoint = GLKVector4Make((2.0 * point.x / view.frame.size.width) - 1.0,
+                                                (-2.0 * point.y / view.frame.size.height) + 1.0,
                                                 0.0f,
                                                 1.0f);
     
