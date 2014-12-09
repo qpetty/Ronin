@@ -10,4 +10,9 @@
 
 @interface Hero : Character
 
+@property GLKVector3 destination;
+@property GLKVector3 movementInterval;
+
+-(void)killedCharacter:(Character*)enemy;
+
 @end

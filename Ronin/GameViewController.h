@@ -12,6 +12,8 @@
 @interface GameViewController : GLKViewController
 
 @property (weak) IBOutlet UILabel *highScore;
+@property (weak) IBOutlet UILabel *lifeDisplay;
+
 @property (weak) IBOutlet UIButton *startButton;
 
 @end

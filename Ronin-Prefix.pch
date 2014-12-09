@@ -16,4 +16,7 @@
 #define RANDOM_NUMBER_0_TO_1 ((float)(rand() % 1001) / 1000.0)
 #define RANDOM_NUMBER_NEG1_TO_1 ((float)(rand() % 2001) / 1000.0 - 1.0)
 
+#define PRINT_VEC3(vec) NSLog(@"(vec): (%f, %f, %f)", (vec).x, (vec).y, (vec).z);
+#define PRINT_VEC4(vec) NSLog(@"vec: (%f, %f, %f, %f)", (vec).x, (vec).y, (vec).z, (vec).w);
+
 #endif

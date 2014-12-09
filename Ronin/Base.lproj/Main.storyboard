@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FEU-vK-F1z">
-                                <rect key="frame" x="16" y="23" width="42" height="21"/>
+                                <rect key="frame" x="16" y="28" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -32,17 +32,26 @@
                                     <action selector="startGame:" destination="BV1-FR-VrT" eventType="touchUpInside" id="bMV-uq-bfE"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3qg-pX-5Y2">
+                                <rect key="frame" x="542" y="28" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="bTL-hH-RMY" secondAttribute="centerX" id="1SQ-Ip-GHJ"/>
                             <constraint firstAttribute="centerY" secondItem="bTL-hH-RMY" secondAttribute="centerY" id="RRR-08-crP"/>
-                            <constraint firstItem="FEU-vK-F1z" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" constant="3" id="WLT-VX-vuO"/>
+                            <constraint firstItem="FEU-vK-F1z" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" constant="8" id="WLT-VX-vuO"/>
                             <constraint firstItem="FEU-vK-F1z" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="buY-rY-iAw"/>
+                            <constraint firstItem="3qg-pX-5Y2" firstAttribute="top" secondItem="8aa-yV-Osq" secondAttribute="bottom" constant="8" id="nu4-wy-7pb"/>
+                            <constraint firstItem="3qg-pX-5Y2" firstAttribute="trailing" secondItem="3se-qz-xqx" secondAttribute="trailingMargin" id="t8X-VU-qx6"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="highScore" destination="FEU-vK-F1z" id="BPU-eI-rWB"/>
+                        <outlet property="lifeDisplay" destination="3qg-pX-5Y2" id="F88-Hc-3CC"/>
                         <outlet property="startButton" destination="bTL-hH-RMY" id="yNF-Z6-H8a"/>
                     </connections>
                 </viewController>

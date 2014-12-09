@@ -230,6 +230,8 @@ GLfloat gCubeVertexData[216] =
 
 -(void)updateHUD {
     self.highScore.text = [NSString stringWithFormat:@"Score: %lu", enemiesKilled];
+    if (hero.health < 0) { hero.health = 0; }
+    self.lifeDisplay.text = [NSString stringWithFormat:@"Lives: %lu", hero.health];
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -239,9 +241,20 @@ GLfloat gCubeVertexData[216] =
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     _projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
+    [hero update];
+    
+    GLKVector3 worldMove = GLKVector3Subtract(GLKVector3Make(0.0f, 0.0f, 0.0f), hero.location);
+    worldMove = GLKVector3DivideScalar(worldMove, 80.0);
+    worldMove.z = 0;
+    hero.location = GLKVector3Add(hero.location, worldMove);
+    hero.destination = GLKVector3Add(hero.destination, worldMove);
+    
     for (Enemy *en in allEnemies) {
         [en update];
+        en.location = GLKVector3Add(en.location, worldMove);
     }
+    
+    [self updateHUD];
     
     if (hero.health <= 0) {
         [self gameOver];
@@ -321,6 +334,7 @@ GLfloat gCubeVertexData[216] =
 
                 if ([oneEnemy hitEnemyAt:hitPoint] == YES) {
                     enemiesKilled++;
+                    [hero killedCharacter:oneEnemy];
                     [self updateHUD];
                 }
             }
