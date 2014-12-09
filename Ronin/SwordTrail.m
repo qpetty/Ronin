@@ -11,6 +11,7 @@
 @interface TouchPoint : NSObject
 
 @property CGPoint point;
+@property float delta;
 -(instancetype)initWithGLKVec4:(GLKVector4)vec;
 
 @end
@@ -20,9 +21,17 @@
 -(instancetype)initWithGLKVec4:(GLKVector4)vec {
     self = [super init];
     if (self) {
-       self.point = CGPointMake(vec.x, vec.y);
+        self.point = CGPointMake(vec.x, vec.y);
+        self.delta = 0.05;
     }
     return self;
+}
+
+-(void)update {
+    self.delta -= 0.007;
+    if (self.delta < 0.0f) {
+        self.delta = 0.0f;
+    }
 }
 
 @end
@@ -52,7 +61,7 @@
 }
 
 -(void)update {
-    float delta = 0.05;
+    //float delta = 0.05;
     float depth = -5.0;
     
     int offset = 24;
@@ -61,33 +70,35 @@
     
     [self.points enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         TouchPoint *singlePoint = (TouchPoint*)obj;
+        [singlePoint update];
+        
         //NSLog(@"vertexData: (%f, %f)", singlePoint.point.x, singlePoint.point.y);
-        vertexData[idx * offset + 0] = singlePoint.point.x - delta;
-        vertexData[idx * offset + 1] = singlePoint.point.y + delta;
+        vertexData[idx * offset + 0] = singlePoint.point.x - singlePoint.delta;
+        vertexData[idx * offset + 1] = singlePoint.point.y + singlePoint.delta;
         vertexData[idx * offset + 2] = depth;
         
         vertexData[idx * offset + 3] = 0.0f;
         vertexData[idx * offset + 4] = 0.0f;
         vertexData[idx * offset + 5] = 1.0f;
         
-        vertexData[idx * offset + 6] = singlePoint.point.x + delta;
-        vertexData[idx * offset + 7] = singlePoint.point.y + delta;
+        vertexData[idx * offset + 6] = singlePoint.point.x + singlePoint.delta;
+        vertexData[idx * offset + 7] = singlePoint.point.y + singlePoint.delta;
         vertexData[idx * offset + 8] = depth;
         
         vertexData[idx * offset + 9] = 0.0f;
         vertexData[idx * offset + 10] = 0.0f;
         vertexData[idx * offset + 11] = 1.0f;
         
-        vertexData[idx * offset + 12] = singlePoint.point.x - delta;
-        vertexData[idx * offset + 13] = singlePoint.point.y - delta;
+        vertexData[idx * offset + 12] = singlePoint.point.x - singlePoint.delta;
+        vertexData[idx * offset + 13] = singlePoint.point.y - singlePoint.delta;
         vertexData[idx * offset + 14] = depth;
         
         vertexData[idx * offset + 15] = 0.0f;
         vertexData[idx * offset + 16] = 0.0f;
         vertexData[idx * offset + 17] = 1.0f;
         
-        vertexData[idx * offset + 18] = singlePoint.point.x + delta;
-        vertexData[idx * offset + 19] = singlePoint.point.y - delta;
+        vertexData[idx * offset + 18] = singlePoint.point.x + singlePoint.delta;
+        vertexData[idx * offset + 19] = singlePoint.point.y - singlePoint.delta;
         vertexData[idx * offset + 20] = depth;
         
         vertexData[idx * offset + 21] = 0.0f;

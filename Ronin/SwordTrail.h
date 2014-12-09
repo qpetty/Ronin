@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
-#define NUMBER_OF_POINTS_IN_TAIL 20
+#define NUMBER_OF_POINTS_IN_TAIL 12
 
 @interface SwordTrail : NSObject
 
