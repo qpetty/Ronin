@@ -10,4 +10,12 @@
 
 @implementation Hero
 
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        self.diffuseColor = GLKVector4Make(0.4f, 0.4f, 1.0f, 1.0f);
+    }
+    return self;
+}
+
 @end

@@ -19,6 +19,7 @@ enum
 {
     UNIFORM_MODELVIEWPROJECTION_MATRIX,
     UNIFORM_NORMAL_MATRIX,
+    UNIFORM_DIFFUSE_COLOR,
     NUM_UNIFORMS
 };
 GLint uniforms[NUM_UNIFORMS];
@@ -233,6 +234,7 @@ GLfloat gCubeVertexData[216] =
     
     GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, hero.diffuseColor.v);
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, hero.normalMatrix.m);
     
@@ -241,6 +243,8 @@ GLfloat gCubeVertexData[216] =
     for (Enemy *en in allEnemies) {
         if (en.isVisible) {
             mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
+            
+            glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, en.diffuseColor.v);
             
             glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
             glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, en.normalMatrix.m);
@@ -368,6 +372,7 @@ GLfloat gCubeVertexData[216] =
     // Get uniform locations.
     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
     uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(_program, "normalMatrix");
+    uniforms[UNIFORM_DIFFUSE_COLOR] = glGetUniformLocation(_program, "diffuseColor");
     
     // Release vertex and fragment shaders.
     if (vertShader) {

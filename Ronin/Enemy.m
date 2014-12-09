@@ -8,22 +8,41 @@
 
 #import "Enemy.h"
 
+#define MAX_HEALTH 2
+
 @implementation Enemy
 
 -(instancetype)initWithDepth:(float)depth {
     self = [self init];
     if (self) {
-        self.location = [self spawnLocation:depth];
+        self.location = GLKVector3Make(0.0f, 0.0f, depth);
+        [self respawn];
     }
     return self;
+}
+
+-(void)respawn {
+    self.location = [self spawnLocation:self.location.z];
+    self.health = self.maxHealth = RANDOM_NUMBER_0_TO(MAX_HEALTH) + 1;
+    
+    float oneRandom = RANDOM_NUMBER_0_TO(2);
+    
+    if (oneRandom == 0) {
+        self.diffuseColor = GLKVector4Make(1.0f, 0.0f, 0.0f, 1.0f);
+    } else if (oneRandom == 1) {
+        self.diffuseColor = GLKVector4Make(0.0f, 1.0f, 0.0f, 1.0f);
+    } else if (oneRandom == 2) {
+        self.diffuseColor = GLKVector4Make(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    
+    self.isVisible = YES;
 }
 
 -(void)update {
     float step = 0.005;
     
     if (self.isVisible == NO) {
-        self.location = [self spawnLocation:self.location.z];
-        self.isVisible = YES;
+        [self respawn];
     }
     
     GLKVector3 dir = GLKVector3Subtract(self.target.location, self.location);
@@ -51,9 +70,17 @@
     //NSLog(@"hitpoint: (%f, %f, %f, %f)\n", hitPoint.x, hitPoint.y, hitPoint.z, hitPoint.w);
 
     if (GLKVector4Length(GLKVector4Subtract(middleOfSelf, hitPoint)) < 1.1) {
+        
+        self.diffuseColor = GLKVector4MultiplyScalar(self.diffuseColor, 1.0 / (float)self.maxHealth);
+        if (--self.health == 0) {
+            self.isVisible = NO;
+        }
         NSLog(@"Enemy: %@ hit!", self);
-        self.isVisible = NO;
     }
+}
+
+-(NSString *)description {
+    return [NSString stringWithFormat:@"Enemy-> Health: %lu/%lu", self.health, self.maxHealth];
 }
 
 @end

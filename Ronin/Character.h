@@ -12,8 +12,13 @@
 
 @interface Character : NSObject
 
+@property NSUInteger health;
+@property NSUInteger maxHealth;
+
 @property GLKVector3 location;
 @property BOOL isVisible;
+
+@property GLKVector4 diffuseColor;
 
 @property (nonatomic) GLKMatrix4 modelMatrix;
 @property (nonatomic) GLKMatrix3 normalMatrix;
