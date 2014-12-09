@@ -69,6 +69,25 @@
     return GLKVector3Make(2.0 * cosf(oneRandom), 2.0 * sinf(oneRandom), depth);
 }
 
+-(void)bump:(GLKVector4)bumpPoint {
+    if (self.isVisible == NO) {
+        return;
+    }
+    
+    bumpPoint.z = bumpPoint.w = 0.0f;
+    GLKVector4 middleOfSelf = GLKVector4Make(self.location.x, self.location.y, 0.0f, 0.0f);
+    
+    if (GLKVector4Length(GLKVector4Subtract(middleOfSelf, bumpPoint)) < 1.1) {
+        GLKVector4 bump = GLKVector4Subtract(middleOfSelf, GLKVector4MakeWithVector3(self.target.location, 0.0f));
+        bump.z = 0;
+        float distance = GLKVector4Length(bump);
+        
+        bump = GLKVector4Normalize(bump);
+        bump = GLKVector4MultiplyScalar(bump, 1.0 / distance);
+        self.location = GLKVector3Add(self.location, GLKVector3Make(bump.x, bump.y, 0.0f));
+    }
+}
+
 -(BOOL)hitEnemyAt:(GLKVector4)hitPoint {
     
     if (self.isVisible == NO) {

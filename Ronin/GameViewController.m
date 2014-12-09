@@ -130,6 +130,9 @@ GLfloat gCubeVertexData[216] =
     UIPanGestureRecognizer *panning = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
     [view addGestureRecognizer:panning];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
+    [view addGestureRecognizer:tap];
+    
     [self setupGL];
 }
 
@@ -301,12 +304,26 @@ GLfloat gCubeVertexData[216] =
         return;
     }
     
+    UIView *viewOfTrans = sender.view;
+    
     if ([sender isKindOfClass:[UIRotationGestureRecognizer class]]) {
         UIRotationGestureRecognizer *rot = (UIRotationGestureRecognizer*)sender;
         _rotation = -rot.rotation;
+    } else if ([sender isKindOfClass:[UITapGestureRecognizer class]]) {
+        UITapGestureRecognizer *tap = (UITapGestureRecognizer*)sender;
+        GLKVector3 heroLocation = hero.location;
+        
+        GLKVector4 point = [self pointInModelSpaceForScreenPoint:[tap locationInView:viewOfTrans]
+                                                          ofView:sender.view
+                                            withProjectionMatrix:_projectionMatrix
+                                                        andDepth:-heroLocation.z];
+        
+        for (Enemy *oneEnemy in allEnemies) {
+            [oneEnemy bump:point];
+        }
+        
     } else if ([sender isKindOfClass:[UIPanGestureRecognizer class]]) {
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer*)sender;
-        UIView *viewOfTrans = sender.view;
         GLKVector3 heroLocation = hero.location;
         
         if (sender.state == UIGestureRecognizerStateBegan) {

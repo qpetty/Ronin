@@ -14,6 +14,7 @@
 @property NSUInteger spawnDelay;
 
 -(instancetype)initWithDepth:(float)depth;
+-(void)bump:(GLKVector4)bumpPoint;
 -(BOOL)hitEnemyAt:(GLKVector4)hitPoint;
 
 @end
