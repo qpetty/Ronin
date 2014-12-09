@@ -24,15 +24,16 @@
 -(void)update {
     self.location = GLKVector3Add(self.location, self.movementInterval);
     
-    if (GLKVector3Length(GLKVector3Subtract(self.destination, self.location)) < 0.01) {
+    if (GLKVector3Length(GLKVector3Subtract(self.destination, self.location)) < 0.05) {
         self.movementInterval = GLKVector3Make(0.0f, 0.0f, 0.0f);
     }
 }
 
 -(void)killedCharacter:(Character*)enemy {
-    float scale = 40.0;
+    float scale = 0.05;
     GLKVector3 dir = GLKVector3Subtract(enemy.location, self.location);
-    dir = GLKVector3DivideScalar(dir, scale);
+    dir = GLKVector3Normalize(dir);
+    dir = GLKVector3MultiplyScalar(dir, scale);
     dir.z = 0.0;
     self.movementInterval = dir;
     PRINT_VEC3(self.movementInterval);
