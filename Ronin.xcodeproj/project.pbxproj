@@ -19,6 +19,7 @@
 		5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB07C1A3514FE00DBD03B /* Character.m */; };
 		5A1EB08A1A35890200DBD03B /* Hero.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB0891A35890200DBD03B /* Hero.m */; };
 		5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB08C1A35891A00DBD03B /* Enemy.m */; };
+		5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2901A36DE5800E733DA /* SwordTrail.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		5A1EB08B1A35891A00DBD03B /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
 		5A1EB08C1A35891A00DBD03B /* Enemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enemy.m; sourceTree = "<group>"; };
 		5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Ronin-Prefix.pch"; path = "../Ronin-Prefix.pch"; sourceTree = "<group>"; };
+		5AF5E28F1A36DE5800E733DA /* SwordTrail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordTrail.h; sourceTree = "<group>"; };
+		5AF5E2901A36DE5800E733DA /* SwordTrail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordTrail.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,8 @@
 				5A1EB0501A34D37200DBD03B /* Shader.vsh */,
 				5A1EB0521A34D37200DBD03B /* GameViewController.h */,
 				5A1EB0531A34D37200DBD03B /* GameViewController.m */,
+				5AF5E28F1A36DE5800E733DA /* SwordTrail.h */,
+				5AF5E2901A36DE5800E733DA /* SwordTrail.m */,
 				5A1EB07B1A3514FE00DBD03B /* Character.h */,
 				5A1EB07C1A3514FE00DBD03B /* Character.m */,
 				5A1EB0881A35890200DBD03B /* Hero.h */,
@@ -245,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */,
+				5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */,
 				5A1EB08A1A35890200DBD03B /* Hero.m in Sources */,
 				5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */,
 				5A1EB04D1A34D37200DBD03B /* AppDelegate.m in Sources */,
@@ -446,6 +452,7 @@
 				5A1EB06D1A34D37200DBD03B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A1EB06E1A34D37200DBD03B /* Build configuration list for PBXNativeTarget "RoninTests" */ = {
 			isa = XCConfigurationList;
@@ -454,6 +461,7 @@
 				5A1EB0701A34D37200DBD03B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

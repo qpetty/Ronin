@@ -11,6 +11,7 @@
 
 #import "Hero.h"
 #import "Enemy.h"
+#import "SwordTrail.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -36,12 +37,12 @@ GLfloat gCubeVertexData[216] =
 {
     // Data layout for each line below is:
     // positionX, positionY, positionZ,     normalX, normalY, normalZ,
-    0.5f, 0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
     0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
+    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
     
 //    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
 //    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
@@ -91,11 +92,16 @@ GLfloat gCubeVertexData[216] =
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
+    GLuint _trailArray;
+    GLuint _trailBuffer;
+    
     GLKVector4 beginningTouch;
     
     Hero *hero;
     NSMutableArray *allEnemies;
     NSUInteger enemiesKilled;
+    
+    SwordTrail *trail;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -132,6 +138,8 @@ GLfloat gCubeVertexData[216] =
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
     [view addGestureRecognizer:tap];
+    
+    trail = [[SwordTrail alloc] init];
     
     [self setupGL];
 }
@@ -201,12 +209,26 @@ GLfloat gCubeVertexData[216] =
     
     glEnable(GL_DEPTH_TEST);
     
+    
     glGenVertexArraysOES(1, &_vertexArray);
     glBindVertexArrayOES(_vertexArray);
     
     glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+    
+    
+    glGenVertexArraysOES(1, &_trailArray);
+    glBindVertexArrayOES(_trailArray);
+    
+    glGenBuffers(1, &_trailBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
+    glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
@@ -257,6 +279,8 @@ GLfloat gCubeVertexData[216] =
         en.location = GLKVector3Add(en.location, worldMove);
     }
     
+    [trail update];
+    
     [self updateHUD];
     
     if (hero.health <= 0) {
@@ -293,6 +317,19 @@ GLfloat gCubeVertexData[216] =
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
     }
+    
+    glBindVertexArrayOES(_trailArray);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
+    glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
+
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, trail.diffuseColor.v);
+    
+    mvp = GLKMatrix4Multiply(_projectionMatrix, trail.modelMatrix);
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, trail.normalMatrix.m);
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, trail.verticiesToDraw - 1);
 }
 
 #pragma mark Gesture Callbacks
@@ -326,22 +363,21 @@ GLfloat gCubeVertexData[216] =
         UIPanGestureRecognizer *pan = (UIPanGestureRecognizer*)sender;
         GLKVector3 heroLocation = hero.location;
         
+        GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan locationInView:viewOfTrans]
+                                                          ofView:sender.view
+                                            withProjectionMatrix:_projectionMatrix
+                                                        andDepth:-heroLocation.z];
+        
+        [trail addTouchPoint:point];
+        
         if (sender.state == UIGestureRecognizerStateBegan) {
             //NSLog(@"began touches: %@", [NSThread isMainThread] ? @"YES" : @"NO");
             
-            beginningTouch = [self pointInModelSpaceForScreenPoint:[pan locationInView:viewOfTrans]
-                                                            ofView:sender.view
-                                              withProjectionMatrix:_projectionMatrix
-                                                          andDepth:-heroLocation.z];
+            beginningTouch = point;
 
             //NSLog(@"beginningTouch: (%f, %f, %f, %f)", beginningTouch.x, beginningTouch.y, beginningTouch.z, beginningTouch.w);
         } else if (sender.state == UIGestureRecognizerStateEnded) {
             //NSLog(@"ended touches");
-            
-            GLKVector4 point = [self pointInModelSpaceForScreenPoint:[pan locationInView:viewOfTrans]
-                                                              ofView:sender.view
-                                                withProjectionMatrix:_projectionMatrix
-                                                            andDepth:-heroLocation.z];
             
             GLKVector4 dir = GLKVector4Subtract(point, beginningTouch);
             dir = GLKVector4DivideScalar(dir, 2.0f);
