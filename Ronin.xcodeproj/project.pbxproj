@@ -20,6 +20,8 @@
 		5A1EB08A1A35890200DBD03B /* Hero.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB0891A35890200DBD03B /* Hero.m */; };
 		5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1EB08C1A35891A00DBD03B /* Enemy.m */; };
 		5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2901A36DE5800E733DA /* SwordTrail.m */; };
+		5AF5E2931A37AF7F00E733DA /* ChristmasPresent.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */; };
+		5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2941A37D20800E733DA /* mustang.bmp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 		5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Ronin-Prefix.pch"; path = "../Ronin-Prefix.pch"; sourceTree = "<group>"; };
 		5AF5E28F1A36DE5800E733DA /* SwordTrail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordTrail.h; sourceTree = "<group>"; };
 		5AF5E2901A36DE5800E733DA /* SwordTrail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordTrail.m; sourceTree = "<group>"; };
+		5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChristmasPresent.png; sourceTree = "<group>"; };
+		5AF5E2941A37D20800E733DA /* mustang.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = mustang.bmp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,8 @@
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
+				5AF5E2941A37D20800E733DA /* mustang.bmp */,
+				5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */,
 				5A1EB0471A34D37200DBD03B /* Supporting Files */,
 			);
 			path = Ronin;
@@ -229,8 +235,10 @@
 			files = (
 				5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */,
 				5A1EB0571A34D37200DBD03B /* Main.storyboard in Resources */,
+				5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */,
 				5A1EB0591A34D37200DBD03B /* Images.xcassets in Resources */,
 				5A1EB0511A34D37200DBD03B /* Shader.vsh in Resources */,
+				5AF5E2931A37AF7F00E733DA /* ChristmasPresent.png in Resources */,
 				5A1EB04F1A34D37200DBD03B /* Shader.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

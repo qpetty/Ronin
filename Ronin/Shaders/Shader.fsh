@@ -8,7 +8,19 @@
 
 varying lowp vec4 colorVarying;
 
+uniform sampler2D uTextureMask;
+varying lowp vec2 texCoords;
+
 void main()
 {
-    gl_FragColor = colorVarying;
+    lowp vec4 textColor = texture2D(uTextureMask, texCoords);
+    
+    if (textColor == vec4(0.0, 0.0, 0.0, 0.0)) {
+        textColor += colorVarying * 0.5;
+    }
+    
+    gl_FragColor = textColor;
+    
+    //gl_FragColor = texture2D(uTextureMask, texCoords) + colorVarying * 0.5;
+    //gl_FragColor = colorVarying;
 }

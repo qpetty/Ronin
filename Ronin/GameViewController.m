@@ -37,12 +37,12 @@ GLfloat gCubeVertexData[216] =
 {
     // Data layout for each line below is:
     // positionX, positionY, positionZ,     normalX, normalY, normalZ,
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
+    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
+    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   0.0f, 0.0f
     
 //    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
 //    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
@@ -80,6 +80,14 @@ GLfloat gCubeVertexData[216] =
 //    -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
 };
 
+GLfloat texCoords[8] =
+{
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.0f, 1.0f,
+    1.0f, 1.0f
+};
+
 @interface GameViewController () {
     GLuint _program;
     
@@ -95,6 +103,10 @@ GLfloat gCubeVertexData[216] =
     GLuint _trailArray;
     GLuint _trailBuffer;
     
+    GLuint _texCoordsBuf;
+    
+    GLuint texture[1];
+    
     GLKVector4 beginningTouch;
     
     Hero *hero;
@@ -102,6 +114,8 @@ GLfloat gCubeVertexData[216] =
     NSUInteger enemiesKilled;
     
     SwordTrail *trail;
+    
+    GLKTextureInfo *spriteTexture;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -207,7 +221,41 @@ GLfloat gCubeVertexData[216] =
     
     [self loadShaders];
     
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable( GL_BLEND );
+    
     glEnable(GL_DEPTH_TEST);
+    
+    //glGenTextures(1, &texture[0]);
+    //glBindTexture(GL_TEXTURE_2D, texture[0]);
+    
+    
+    
+    NSError *theError;
+    
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    
+    glActiveTexture(GL_TEXTURE0);
+    
+    glGenBuffers(1, &_texCoordsBuf);
+    glBindBuffer(GL_ARRAY_BUFFER, _texCoordsBuf);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+    
+    //glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    //glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 8, BUFFER_OFFSET(0));
+    
+    spriteTexture = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture: %@", theError);
+    }
+    //glBindTexture(spriteTexture.target, spriteTexture.name);
+    
+    //glEnable(spriteTexture.target);
+    
+    //glUniform1i(glGetUniformLocation(_program, "uTextureMask"), 0);
+    //glBindTexture(GL_TEXTURE_2D, spriteTexture.name);
     
     
     glGenVertexArraysOES(1, &_vertexArray);
@@ -218,9 +266,12 @@ GLfloat gCubeVertexData[216] =
     glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(0));
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+    
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
     
     
     glGenVertexArraysOES(1, &_trailArray);
@@ -231,9 +282,9 @@ GLfloat gCubeVertexData[216] =
     glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
     
     glBindVertexArrayOES(0);
 }
@@ -297,6 +348,9 @@ GLfloat gCubeVertexData[216] =
     
     // Render the object again with ES2
     glUseProgram(_program);
+    
+    glBindTexture(spriteTexture.target, spriteTexture.name);
+    glEnable(spriteTexture.target);
     
     GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
@@ -449,6 +503,7 @@ GLfloat gCubeVertexData[216] =
     // This needs to be done prior to linking.
     glBindAttribLocation(_program, GLKVertexAttribPosition, "position");
     glBindAttribLocation(_program, GLKVertexAttribNormal, "normal");
+    glBindAttribLocation(_program, GLKVertexAttribTexCoord0, "texCoord0");
     
     // Link program.
     if (![self linkProgram:_program]) {
