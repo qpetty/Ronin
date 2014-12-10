@@ -9,9 +9,11 @@
 attribute vec4 position;
 attribute vec3 normal;
 attribute vec2 texCoord0;
+attribute vec2 texCoord1;
 
 varying lowp vec4 colorVarying;
-varying lowp vec2 texCoords;
+varying lowp vec2 texCoords0;
+varying lowp vec2 texCoords1;
 
 uniform mat4 modelViewProjectionMatrix;
 uniform mat3 normalMatrix;
@@ -26,7 +28,8 @@ void main()
                  
     colorVarying = diffuseColor * nDotVP;
     
-    texCoords = texCoord0;
+    texCoords0 = texCoord0;
+    texCoords1 = texCoord1;
     
     gl_Position = modelViewProjectionMatrix * position;
 }

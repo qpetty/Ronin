@@ -22,6 +22,8 @@
 		5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2901A36DE5800E733DA /* SwordTrail.m */; };
 		5AF5E2931A37AF7F00E733DA /* ChristmasPresent.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */; };
 		5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2941A37D20800E733DA /* mustang.bmp */; };
+		5AF5E2971A3800CF00E733DA /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2961A3800CF00E733DA /* square.png */; };
+		5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		5AF5E2901A36DE5800E733DA /* SwordTrail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordTrail.m; sourceTree = "<group>"; };
 		5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChristmasPresent.png; sourceTree = "<group>"; };
 		5AF5E2941A37D20800E733DA /* mustang.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = mustang.bmp; sourceTree = "<group>"; };
+		5AF5E2961A3800CF00E733DA /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
+		5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watercolor_texture_bw.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,8 @@
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
+				5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */,
+				5AF5E2961A3800CF00E733DA /* square.png */,
 				5AF5E2941A37D20800E733DA /* mustang.bmp */,
 				5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */,
 				5A1EB0471A34D37200DBD03B /* Supporting Files */,
@@ -234,6 +240,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */,
+				5AF5E2971A3800CF00E733DA /* square.png in Resources */,
+				5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */,
 				5A1EB0571A34D37200DBD03B /* Main.storyboard in Resources */,
 				5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */,
 				5A1EB0591A34D37200DBD03B /* Images.xcassets in Resources */,
