@@ -8,7 +8,7 @@
 
 #import "Ground.h"
 
-#define SQUARE_SIZE 1.0f
+#define SQUARE_SIZE 2.5f
 
 GLfloat square[48] =
 {
@@ -50,7 +50,7 @@ GLfloat square[48] =
     GLKMatrix4 mvp, newModel = self.modelMatrix;
 
     float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
-    int size = 9;
+    int size = 3;
     
     newModel.m30 = -(float)(size / 2) * increment;
     newModel.m31 = -(float)(size / 2) * increment;
