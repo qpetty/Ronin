@@ -14,6 +14,22 @@
     self = [super init];
     if (self) {
         self.isVisible = YES;
+
+//        GLKMatrix3 ident = GLKMatrix3Identity;
+//        
+//        ident.m20 = (1.0 - TEXTURE_BOX_SIZE) * RANDOM_NUMBER_0_TO_1;
+//        ident.m21 = (1.0 - TEXTURE_BOX_SIZE) * RANDOM_NUMBER_0_TO_1;
+//        
+//        //self.randomMat = ident;
+//        self.randomMat = GLKMatrix3RotateZ(ident, RANDOM_NUMBER_0_TO_1 * 2.0 * M_PI);
+        
+        GLKMatrix3 ident = GLKMatrix3Identity;
+
+        ident = GLKMatrix3RotateZ(ident, RANDOM_NUMBER_0_TO_1 * 2.0 * M_PI);
+        //Maybe take out the TEXTURE_BOX_SIZE addition, but looks ok for now
+        ident.m20 = TEXTURE_BOX_SIZE + (1.0 - TEXTURE_BOX_SIZE) * RANDOM_NUMBER_0_TO_1;
+        ident.m21 = TEXTURE_BOX_SIZE + (1.0 - TEXTURE_BOX_SIZE) * RANDOM_NUMBER_0_TO_1;
+        self.randomMat = ident;
     }
     return self;
 }

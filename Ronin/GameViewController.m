@@ -23,6 +23,7 @@ enum
     UNIFORM_DIFFUSE_COLOR,
     UNIFORM_TEXTURE_MASK0,
     UNIFORM_TEXTURE_MASK1,
+    UNIFORM_RANDOM_NUM,
     NUM_UNIFORMS
 };
 GLint uniforms[NUM_UNIFORMS];
@@ -38,13 +39,13 @@ enum
 GLfloat gCubeVertexData[216] = 
 {
     // Data layout for each line below is:
-    // positionX, positionY, positionZ,     normalX, normalY, normalZ, texture0x, texture0y, texture0z, texture1x, texture1y, texture1z
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 0.0f,     0.2f, 0.0f,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 1.0f,     0.0f, 0.2f,
-    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     0.2f, 0.2f,
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 0.0f,     0.2f, 0.0f,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 1.0f,     0.0f, 0.2f,
-    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f
+    // positionX, positionY, positionZ,     normalX, normalY, normalZ, texture0x, texture0y, texture1x, texture1y,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
+    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   1.0f, 0.0f,     TEXTURE_BOX_SIZE,   0.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
+    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   0.0f, 1.0f,     0.0f,               TEXTURE_BOX_SIZE
     
 //    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
 //    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
@@ -161,10 +162,10 @@ GLfloat texCoords[8] =
 }
 
 -(void)setupGame {
+    srand((unsigned int)time(0));
     hero = [[Hero alloc] init];
     hero.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
     
-    srand((unsigned int)time(0));
     allEnemies = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < 6; i++) {
         Enemy *en = [[Enemy alloc] initWithDepth:-5.0];
@@ -219,6 +220,7 @@ GLfloat texCoords[8] =
 
 - (void)setupGL
 {
+    GLenum err;
     [EAGLContext setCurrentContext:self.context];
     
     [self loadShaders];
@@ -227,54 +229,36 @@ GLfloat texCoords[8] =
     
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable( GL_BLEND );
+    glEnable(GL_BLEND);
     
     glEnable(GL_DEPTH_TEST);
     
-    //glGenTextures(1, &texture[0]);
-    //glBindTexture(GL_TEXTURE_2D, texture[0]);
-    
-    
-    
+    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
     NSError *theError;
     
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
     
-    //glGenBuffers(1, &_texCoordsBuf);
-    //glBindBuffer(GL_ARRAY_BUFFER, _texCoordsBuf);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
-    
-    //glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-    //glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 8, BUFFER_OFFSET(0));
-    
     glActiveTexture(GL_TEXTURE0);
-    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&theError];
+    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
     if (theError) {
         NSLog(@"error loading texture0: %@", theError);
     }
-    NSLog(@"GL Error = %u", glGetError());
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     glUniform1i(uniforms[UNIFORM_TEXTURE_MASK0], 0);
-    NSLog(@"GL Error = %u", glGetError());
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     glBindTexture(spriteTexture0.target, spriteTexture0.name);
-    
-    //glBindTexture(spriteTexture.target, spriteTexture.name);
-    
-    //glEnable(spriteTexture.target);
-    
-    //glUniform1i(glGetUniformLocation(_program, "uTextureMask"), 0);
-    //glBindTexture(GL_TEXTURE_2D, spriteTexture.name);
-    
-    NSLog(@"GL Error = %u", glGetError());
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
     //filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
-    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
+    //filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
     //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
     
     NSLog(@"filepath: %@", filePath);
     glActiveTexture(GL_TEXTURE1);
-    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:nil error:&theError];
+    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
     if (theError) {
         NSLog(@"error loading texture1: %@", theError);
     }
@@ -282,6 +266,13 @@ GLfloat texCoords[8] =
     glUniform1i(uniforms[UNIFORM_TEXTURE_MASK1], 1);
     glBindTexture(spriteTexture1.target, spriteTexture1.name);
     
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    NSLog(@"GL Error = %u", glGetError());
+    
+    //Binds arrays for the characters
     glGenVertexArraysOES(1, &_vertexArray);
     glBindVertexArrayOES(_vertexArray);
     
@@ -300,6 +291,8 @@ GLfloat texCoords[8] =
     glEnableVertexAttribArray(GLKVertexAttribTexCoord1);
     glVertexAttribPointer(GLKVertexAttribTexCoord1, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(8 * sizeof(GLfloat)));
     
+    
+    //Binds arrays for the sword tail
     glGenVertexArraysOES(1, &_trailArray);
     glBindVertexArrayOES(_trailArray);
     
@@ -375,24 +368,25 @@ GLfloat texCoords[8] =
     // Render the object again with ES2
     glUseProgram(_program);
     
-//    glBindTexture(spriteTexture0.target, spriteTexture0.name);
-//    glBindTexture(spriteTexture1.target, spriteTexture1.name);
-    //glEnable(spriteTexture0.target);
-    //glEnable(spriteTexture1.target);
-    
     GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
+    //Bind and draw Hero
     glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, hero.diffuseColor.v);
+    glUniformMatrix3fv(uniforms[UNIFORM_RANDOM_NUM], 1, 0, hero.randomMat.m);
+    
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, hero.normalMatrix.m);
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     
+    
+    //Bind and draw Enemies
     for (Enemy *en in allEnemies) {
         if (en.isVisible) {
             mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
             
             glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, en.diffuseColor.v);
+            glUniformMatrix3fv(uniforms[UNIFORM_RANDOM_NUM], 1, 0, en.randomMat.m);
             
             glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
             glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, en.normalMatrix.m);
@@ -400,6 +394,8 @@ GLfloat texCoords[8] =
         }
     }
     
+    
+    //Bind and draw swordtail
     glBindVertexArrayOES(_trailArray);
     
     glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
@@ -560,6 +556,7 @@ GLfloat texCoords[8] =
     uniforms[UNIFORM_DIFFUSE_COLOR] = glGetUniformLocation(_program, "diffuseColor");
     uniforms[UNIFORM_TEXTURE_MASK0] = glGetUniformLocation(_program, "uTextureMask0");
     uniforms[UNIFORM_TEXTURE_MASK1] = glGetUniformLocation(_program, "uTextureMask1");
+    uniforms[UNIFORM_RANDOM_NUM] = glGetUniformLocation(_program, "uRandNum");
     
     // Release vertex and fragment shaders.
     if (vertShader) {

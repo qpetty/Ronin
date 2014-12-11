@@ -10,6 +10,10 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
+#ifndef TEXTURE_BOX_SIZE
+#define TEXTURE_BOX_SIZE 0.25f
+#endif
+
 @interface Character : NSObject
 
 @property NSInteger health;
@@ -19,6 +23,7 @@
 @property BOOL isVisible;
 
 @property GLKVector4 diffuseColor;
+@property GLKMatrix3 randomMat;
 
 @property (nonatomic) GLKMatrix4 modelMatrix;
 @property (nonatomic) GLKMatrix3 normalMatrix;

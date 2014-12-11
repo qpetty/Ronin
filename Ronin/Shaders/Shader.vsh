@@ -19,6 +19,8 @@ uniform mat4 modelViewProjectionMatrix;
 uniform mat3 normalMatrix;
 uniform vec4 diffuseColor;
 
+uniform mat3 uRandNum;
+
 void main()
 {
     vec3 eyeNormal = normalize(normalMatrix * normal);
@@ -29,7 +31,7 @@ void main()
     colorVarying = diffuseColor * nDotVP;
     
     texCoords0 = texCoord0;
-    texCoords1 = texCoord1;
+    texCoords1 = (uRandNum * vec3(texCoord1, 1.0)).xy;
     
     gl_Position = modelViewProjectionMatrix * position;
 }
