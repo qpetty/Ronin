@@ -11,53 +11,6 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-GLfloat gCubeVertexData[216] =
-{
-    // Data layout for each line below is:
-    // positionX, positionY, positionZ,     normalX, normalY, normalZ, texture0x, texture0y, texture1x, texture1y,
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
-    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   1.0f, 0.0f,     TEXTURE_BOX_SIZE,   0.0f,
-    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
-    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
-    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   0.0f, 1.0f,     0.0f,               TEXTURE_BOX_SIZE
-    
-    //    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
-    //    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    //    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    //    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    //    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    //    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
-    //
-    //    -0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
-    //    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    //    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    //    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    //    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    //    -0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
-    //
-    //    -0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
-    //    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    //    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    //    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    //    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    //    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
-    //
-    //    0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
-    //    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    //    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    //    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    //    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    //    -0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
-    //
-    //    0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
-    //    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    //    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    //    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    //    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    //    -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
-};
-
 @interface UniformVariable : NSObject
 
 @property NSString *name;
@@ -105,125 +58,31 @@ GLfloat gCubeVertexData[216] =
     if (self) {
         attributes = [[NSMutableArray alloc] init];
         uniformsArray = [[NSMutableArray alloc] init];
-        [self setupGL];
     }
     return self;
 }
 
-- (void)setupGL
-{
-    GLenum err;
-    //[EAGLContext setCurrentContext:self.context];
-    
-    [self loadShaders];
-    
-    glUseProgram(self.programID);
-    
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    
-    glEnable(GL_DEPTH_TEST);
-    
-    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
-    NSError *theError;
-    
-    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
-    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
-    
-    glActiveTexture(GL_TEXTURE0);
-    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
-    if (theError) {
-        NSLog(@"error loading texture0: %@", theError);
+-(instancetype)initWithVertexShader:(NSString*)vert andFragmentShader:(NSString*)frag {
+    self = [self init];
+    if (self) {
+        [self loadShadersWithVertex:vert andFragment:frag];
     }
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    glUniform1i([self getUniformID:@"uTextureMask0"], 0);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    glBindTexture(spriteTexture0.target, spriteTexture0.name);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    
-    //filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
-    //filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
-    //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
-    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
-    
-    NSLog(@"filepath: %@", filePath);
-    glActiveTexture(GL_TEXTURE1);
-    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
-    if (theError) {
-        NSLog(@"error loading texture1: %@", theError);
-    }
-    
-    glUniform1i([self getUniformID:@"uTextureMask1"], 1);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    glBindTexture(spriteTexture1.target, spriteTexture1.name);
-    
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    
-    //Binds arrays for the characters
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
-    
-    glGenBuffers(1, &_vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
-    
-    GLuint attribID = [self getAttributeID:@"position"];
-    glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(0));
-    
-    attribID = [self getAttributeID:@"normal"];
-    glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
-    
-    attribID = [self getAttributeID:@"texCoord0"];
-    glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
-    
-    attribID = [self getAttributeID:@"texCoord1"];
-    glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(8 * sizeof(GLfloat)));
-    
-    /*
-    //Binds arrays for the sword tail
-    glGenVertexArraysOES(1, &_trailArray);
-    glBindVertexArrayOES(_trailArray);
-    
-    glGenBuffers(1, &_trailBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
-    glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
-    
-    glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
-    */
-    
-    glBindVertexArrayOES(0);
+    return self;
 }
 
-- (BOOL)loadShaders
+- (BOOL)loadShadersWithVertex:(NSString*)vert andFragment:(NSString*)frag
 {
-    NSString *vertShaderPathname, *fragShaderPathname;
-    
     // Create shader program.
     self.programID = glCreateProgram();
     
     // Create and compile vertex shader.
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
-    if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {
+    if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vert]) {
         NSLog(@"Failed to compile vertex shader");
         return NO;
     }
     
     // Create and compile fragment shader.
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
-    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:fragShaderPathname]) {
+    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:frag]) {
         NSLog(@"Failed to compile fragment shader");
         return NO;
     }
@@ -234,12 +93,6 @@ GLfloat gCubeVertexData[216] =
     // Attach fragment shader to program.
     glAttachShader(self.programID, fragShader);
     
-    [self bindAttribs:@"position"];
-    [self bindAttribs:@"normal"];
-    [self bindAttribs:@"texCoord0"];
-    [self bindAttribs:@"texCoord1"];
-    
-    [self linkProgram];
     return YES;
 }
 
@@ -273,8 +126,6 @@ GLfloat gCubeVertexData[216] =
         return NO;
     }
     
-    [self setAllUniforms];
-    
     // Release vertex and fragment shaders.
     if (vertShader) {
         glDetachShader(self.programID, vertShader);
@@ -303,16 +154,6 @@ GLfloat gCubeVertexData[216] =
         return ((UniformVariable*)[uniformsArray objectAtIndex:found]).number;
     }
     return (GLuint)0;
-}
-
--(void)setAllUniforms {
-    // Get uniform locations.
-    [self bindUniform:@"modelViewProjectionMatrix"];
-    [self bindUniform:@"normalMatrix"];
-    [self bindUniform:@"diffuseColor"];
-    [self bindUniform:@"uTextureMask0"];
-    [self bindUniform:@"uTextureMask1"];
-    [self bindUniform:@"uRandNum"];
 }
 
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file

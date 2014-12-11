@@ -15,12 +15,16 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-// Attribute index.
-enum
+GLfloat gCubeVertexData[60] =
 {
-    ATTRIB_VERTEX,
-    ATTRIB_NORMAL,
-    NUM_ATTRIBUTES
+    // Data layout for each line below is:
+    // positionX, positionY, positionZ,     normalX, normalY, normalZ, texture0x, texture0y, texture1x, texture1y,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
+    0.5f, -0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   1.0f, 0.0f,     TEXTURE_BOX_SIZE,   0.0f,
+    0.5f, 0.5f, -0.5f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     TEXTURE_BOX_SIZE,   TEXTURE_BOX_SIZE,
+    -0.5f, -0.5f, -0.5f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,     0.0f,               0.0f,
+    -0.5f, 0.5f, -0.5f,         0.0f, 0.0f, 1.0f,   0.0f, 1.0f,     0.0f,               TEXTURE_BOX_SIZE
 };
 
 @interface GameViewController () {
@@ -91,7 +95,120 @@ enum
     
     trail = [[SwordTrail alloc] init];
     
-    program = [[GLSingleProgram alloc] init];
+    NSString *vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
+    NSString *fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
+    program = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
+    
+    [program bindAttribs:@"position"];
+    [program bindAttribs:@"normal"];
+    [program bindAttribs:@"texCoord0"];
+    [program bindAttribs:@"texCoord1"];
+    
+    [program linkProgram];
+    
+    [program bindUniform:@"modelViewProjectionMatrix"];
+    [program bindUniform:@"normalMatrix"];
+    [program bindUniform:@"diffuseColor"];
+    [program bindUniform:@"uTextureMask0"];
+    [program bindUniform:@"uTextureMask1"];
+    [program bindUniform:@"uRandNum"];
+    
+    [self setupGL];
+}
+
+- (void)setupGL
+{
+    GLenum err;
+    //[EAGLContext setCurrentContext:self.context];
+    
+    glUseProgram(program.programID);
+    
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    
+    glEnable(GL_DEPTH_TEST);
+    
+    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
+    NSError *theError;
+    
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    
+    glActiveTexture(GL_TEXTURE0);
+    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture0: %@", theError);
+    }
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    glUniform1i([program getUniformID:@"uTextureMask0"], 0);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    glBindTexture(spriteTexture0.target, spriteTexture0.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    //filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
+    //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
+    
+    NSLog(@"filepath: %@", filePath);
+    glActiveTexture(GL_TEXTURE1);
+    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture1: %@", theError);
+    }
+    
+    glUniform1i([program getUniformID:@"uTextureMask1"], 1);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    glBindTexture(spriteTexture1.target, spriteTexture1.name);
+    
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    //Binds arrays for the characters
+    glGenVertexArraysOES(1, &_vertexArray);
+    glBindVertexArrayOES(_vertexArray);
+    
+    glGenBuffers(1, &_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    
+    GLuint attribID = [program getAttributeID:@"position"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    
+    attribID = [program getAttributeID:@"normal"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+    
+    attribID = [program getAttributeID:@"texCoord0"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
+    
+    attribID = [program getAttributeID:@"texCoord1"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(8 * sizeof(GLfloat)));
+    
+    /*
+     //Binds arrays for the sword tail
+     glGenVertexArraysOES(1, &_trailArray);
+     glBindVertexArrayOES(_trailArray);
+     
+     glGenBuffers(1, &_trailBuffer);
+     glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
+     glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
+     
+     glEnableVertexAttribArray(GLKVertexAttribPosition);
+     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
+     glEnableVertexAttribArray(GLKVertexAttribNormal);
+     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+     */
+    
+    glBindVertexArrayOES(0);
 }
 
 -(void)setupGame {
@@ -193,7 +310,7 @@ enum
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glBindVertexArrayOES(program.vertexArray);
+    glBindVertexArrayOES(_vertexArray);
 
     // Render the object again with ES2
     glUseProgram(program.programID);
