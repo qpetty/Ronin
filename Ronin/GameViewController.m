@@ -58,12 +58,6 @@ GLfloat gCubeVertexData[60] =
 }
 @property (strong, nonatomic) EAGLContext *context;
 
-- (void)setupGL;
-
-- (BOOL)loadShaders;
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
-- (BOOL)linkProgram:(GLuint)prog;
-- (BOOL)validateProgram:(GLuint)prog;
 @end
 
 @implementation GameViewController
@@ -167,7 +161,7 @@ GLfloat gCubeVertexData[60] =
     //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
     filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
     
-    NSLog(@"filepath: %@", filePath);
+    //NSLog(@"filepath: %@", filePath);
     glActiveTexture(GL_TEXTURE1);
     spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
     if (theError) {
@@ -207,21 +201,6 @@ GLfloat gCubeVertexData[60] =
     attribID = [program getAttributeID:@"texCoord1"];
     glEnableVertexAttribArray(attribID);
     glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(8 * sizeof(GLfloat)));
-    
-    /*
-     //Binds arrays for the sword tail
-     glGenVertexArraysOES(1, &_trailArray);
-     glBindVertexArrayOES(_trailArray);
-     
-     glGenBuffers(1, &_trailBuffer);
-     glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
-     glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
-     
-     glEnableVertexAttribArray(GLKVertexAttribPosition);
-     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
-     glEnableVertexAttribArray(GLKVertexAttribNormal);
-     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
-     */
     
     glBindVertexArrayOES(0);
 }
