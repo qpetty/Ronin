@@ -115,12 +115,12 @@ GLfloat gCubeVertexData[60] =
     
     [swordTrailProgram bindAttribs:@"position"];
     [swordTrailProgram bindAttribs:@"normal"];
+    [swordTrailProgram bindAttribs:@"color"];
     
     [swordTrailProgram linkProgram];
     
     [swordTrailProgram bindUniform:@"modelViewProjectionMatrix"];
     [swordTrailProgram bindUniform:@"normalMatrix"];
-    [swordTrailProgram bindUniform:@"diffuseColor"];
     
     [self setupSwordTrail];
 }
@@ -225,11 +225,15 @@ GLfloat gCubeVertexData[60] =
     
     GLuint attribID = [swordTrailProgram getAttributeID:@"position"];
     glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(0));
     
     attribID = [swordTrailProgram getAttributeID:@"normal"];
     glEnableVertexAttribArray(attribID);
-    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+    
+    attribID = [swordTrailProgram getAttributeID:@"color"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
     
     glBindVertexArrayOES(0);
 }
@@ -372,8 +376,6 @@ GLfloat gCubeVertexData[60] =
     glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
     glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
 
-    glUniform4fv([swordTrailProgram getUniformID:@"diffuseColor"], 1, trail.diffuseColor.v);
-    
     mvp = GLKMatrix4Multiply(_projectionMatrix, trail.modelMatrix);
     glUniformMatrix4fv([swordTrailProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
     glUniformMatrix3fv([swordTrailProgram getUniformID:@"normalMatrix"], 1, 0, trail.normalMatrix.m);

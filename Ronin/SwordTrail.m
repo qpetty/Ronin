@@ -8,12 +8,17 @@
 
 #import "SwordTrail.h"
 
+#define BUFFER_POINTS_PER_POINT 20
+
 @interface TouchPoint : NSObject
 
 @property CGPoint point;
 @property GLKVector4 delta;
 @property NSInteger life;
 @property BOOL isAlive;
+
+@property GLKVector4 diffuseColor;
+
 -(instancetype)initWithGLKVec4:(GLKVector4)vec andNextPoint:(TouchPoint*)nextPoint;
 
 @end
@@ -29,6 +34,8 @@
         distance = 0.02;
         self.life = 20;
         self.isAlive = YES;
+        
+        self.diffuseColor = GLKVector4Make(1.0f, 1.0f, 1.0f, 0.8f);
         
         vec.z = vec.w = 0;
         if (nextPoint) {
@@ -46,6 +53,10 @@
 
 -(void)update {
 
+    GLKVector4 color = self.diffuseColor;
+    color.w -= 0.1;
+    self.diffuseColor = color;
+    
     self.delta = GLKVector4Subtract(self.delta, GLKVector4MultiplyScalar(GLKVector4Normalize(self.delta), distance));
 
     if (--self.life < 1 || GLKVector4Length(self.delta) < 0.015) {
@@ -59,7 +70,7 @@
 
 
 @implementation SwordTrail {
-    GLfloat vertexData[NUMBER_OF_POINTS_IN_TAIL * 3 * 2 * 2];
+    GLfloat vertexData[NUMBER_OF_POINTS_IN_TAIL * BUFFER_POINTS_PER_POINT];
 }
 
 -(instancetype)init {
@@ -67,7 +78,6 @@
     if (self) {
         self.vertexArray = vertexData;
         self.vertexArraySize = sizeof(vertexData);
-        self.diffuseColor = GLKVector4Make(1.0f, 1.0f, 1.0f, 0.4f);
         
         self.points = [[NSMutableArray alloc] init];
     }
@@ -96,7 +106,7 @@
 -(void)update {
     float depth = -5.0;
     
-    int offset = 12;
+    int offset = BUFFER_POINTS_PER_POINT;
     
     self.verticiesToDraw = (GLsizei)(self.points.count * 2);
     
@@ -115,13 +125,23 @@
         vertexData[idx * offset + 4] = 0.0f;
         vertexData[idx * offset + 5] = 1.0f;
         
-        vertexData[idx * offset + 6] = singlePoint.point.x - singlePoint.delta.x;
-        vertexData[idx * offset + 7] = singlePoint.point.y - singlePoint.delta.y;
-        vertexData[idx * offset + 8] = depth;
+        vertexData[idx * offset + 6] = singlePoint.diffuseColor.x;
+        vertexData[idx * offset + 7] = singlePoint.diffuseColor.y;
+        vertexData[idx * offset + 8] = singlePoint.diffuseColor.z;
+        vertexData[idx * offset + 9] = singlePoint.diffuseColor.w;
         
-        vertexData[idx * offset + 9] = 0.0f;
-        vertexData[idx * offset + 10] = 0.0f;
-        vertexData[idx * offset + 11] = 1.0f;
+        vertexData[idx * offset + 10] = singlePoint.point.x - singlePoint.delta.x;
+        vertexData[idx * offset + 11] = singlePoint.point.y - singlePoint.delta.y;
+        vertexData[idx * offset + 12] = depth;
+        
+        vertexData[idx * offset + 13] = 0.0f;
+        vertexData[idx * offset + 14] = 0.0f;
+        vertexData[idx * offset + 15] = 1.0f;
+        
+        vertexData[idx * offset + 16] = singlePoint.diffuseColor.x;
+        vertexData[idx * offset + 17] = singlePoint.diffuseColor.y;
+        vertexData[idx * offset + 18] = singlePoint.diffuseColor.z;
+        vertexData[idx * offset + 19] = singlePoint.diffuseColor.w;
         
         if (singlePoint.isAlive == NO) {
             [indeciesToRemove addIndex:idx];

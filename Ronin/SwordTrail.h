@@ -15,8 +15,6 @@
 
 @property NSMutableArray *points;
 
-@property GLKVector4 diffuseColor;
-
 @property GLfloat *vertexArray;
 @property size_t vertexArraySize;
 @property GLsizei verticiesToDraw;
