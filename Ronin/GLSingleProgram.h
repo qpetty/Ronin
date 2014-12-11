@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
 
 #import "Character.h"
 #import "SwordTrail.h"

@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
 
 #define NUMBER_OF_POINTS_IN_TAIL 12
 

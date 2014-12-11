@@ -28,6 +28,7 @@
 		5AF5E2A01A3945C500E733DA /* GLSingleProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E29F1A3945C500E733DA /* GLSingleProgram.m */; };
 		5AF5E2A31A39730300E733DA /* SwordTrail.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A11A39730300E733DA /* SwordTrail.fsh */; };
 		5AF5E2A41A39730300E733DA /* SwordTrail.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A21A39730300E733DA /* SwordTrail.vsh */; };
+		5AF5E2A71A397ED400E733DA /* Ground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A61A397ED400E733DA /* Ground.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +63,7 @@
 		5A1EB0891A35890200DBD03B /* Hero.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hero.m; sourceTree = "<group>"; };
 		5A1EB08B1A35891A00DBD03B /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
 		5A1EB08C1A35891A00DBD03B /* Enemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enemy.m; sourceTree = "<group>"; };
-		5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Ronin-Prefix.pch"; path = "../Ronin-Prefix.pch"; sourceTree = "<group>"; };
+		5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ronin-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		5AF5E28F1A36DE5800E733DA /* SwordTrail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwordTrail.h; sourceTree = "<group>"; };
 		5AF5E2901A36DE5800E733DA /* SwordTrail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwordTrail.m; sourceTree = "<group>"; };
 		5AF5E2921A37AF7F00E733DA /* ChristmasPresent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChristmasPresent.png; sourceTree = "<group>"; };
@@ -74,6 +75,8 @@
 		5AF5E29F1A3945C500E733DA /* GLSingleProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSingleProgram.m; sourceTree = "<group>"; };
 		5AF5E2A11A39730300E733DA /* SwordTrail.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SwordTrail.fsh; path = Shaders/SwordTrail.fsh; sourceTree = "<group>"; };
 		5AF5E2A21A39730300E733DA /* SwordTrail.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SwordTrail.vsh; path = Shaders/SwordTrail.vsh; sourceTree = "<group>"; };
+		5AF5E2A51A397ED400E733DA /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
+		5AF5E2A61A397ED400E733DA /* Ground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ground.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +136,8 @@
 				5A1EB0891A35890200DBD03B /* Hero.m */,
 				5A1EB08B1A35891A00DBD03B /* Enemy.h */,
 				5A1EB08C1A35891A00DBD03B /* Enemy.m */,
+				5AF5E2A51A397ED400E733DA /* Ground.h */,
+				5AF5E2A61A397ED400E733DA /* Ground.m */,
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
@@ -149,6 +154,7 @@
 		5A1EB0471A34D37200DBD03B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */,
 				5A1EB0481A34D37200DBD03B /* Info.plist */,
 				5A1EB0491A34D37200DBD03B /* main.m */,
 			);
@@ -167,7 +173,6 @@
 		5A1EB0651A34D37200DBD03B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				5A1EB0931A3593AE00DBD03B /* Ronin-Prefix.pch */,
 				5A1EB0661A34D37200DBD03B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -285,6 +290,7 @@
 				5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */,
 				5AF5E2A01A3945C500E733DA /* GLSingleProgram.m in Sources */,
 				5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */,
+				5AF5E2A71A397ED400E733DA /* Ground.m in Sources */,
 				5A1EB08A1A35890200DBD03B /* Hero.m in Sources */,
 				5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */,
 				5A1EB04D1A34D37200DBD03B /* AppDelegate.m in Sources */,
