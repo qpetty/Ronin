@@ -50,7 +50,7 @@ GLfloat square[48] =
     GLKMatrix4 mvp, newModel = self.modelMatrix;
 
     float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
-    int size = 7;
+    int size = 9;
     
     newModel.m30 = -(float)(size / 2) * increment;
     newModel.m31 = -(float)(size / 2) * increment;
@@ -64,7 +64,7 @@ GLfloat square[48] =
             glDrawArrays(GL_TRIANGLES, 0, self.verticiesToDraw);
             
             newModel.m31 += increment;// * (float)size;
-            newModel.m32 += 0.01;
+            newModel.m32 += 0.001;
         }
         newModel.m31 = -(float)(size / 2) * increment;// * (float)size;
         newModel.m30 += increment;// * (float)size;

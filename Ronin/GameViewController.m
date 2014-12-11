@@ -88,6 +88,7 @@ GLfloat gCubeVertexData[60] =
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userInteractionEvent:)];
     [view addGestureRecognizer:tap];
     
+    self.preferredFramesPerSecond = 60.0;
     [EAGLContext setCurrentContext:self.context];
     
     trail = [[SwordTrail alloc] init];
@@ -410,7 +411,6 @@ GLfloat gCubeVertexData[60] =
 {
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     GLKMatrix4 mvp;
     
     glUseProgram(backgroundProgram.programID);
