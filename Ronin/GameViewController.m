@@ -28,7 +28,7 @@ GLfloat gCubeVertexData[60] =
 };
 
 @interface GameViewController () {
-    GLSingleProgram *program;
+    GLSingleProgram *program, *swordTrailProgram;
     
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
@@ -113,10 +113,25 @@ GLfloat gCubeVertexData[60] =
     [program bindUniform:@"uTextureMask1"];
     [program bindUniform:@"uRandNum"];
     
-    [self setupGL];
+    [self setupProgram];
+    
+    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"SwordTrail" ofType:@"vsh"];
+    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"SwordTrail" ofType:@"fsh"];
+    swordTrailProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
+    
+    [swordTrailProgram bindAttribs:@"position"];
+    [swordTrailProgram bindAttribs:@"normal"];
+    
+    [swordTrailProgram linkProgram];
+    
+    [swordTrailProgram bindUniform:@"modelViewProjectionMatrix"];
+    [swordTrailProgram bindUniform:@"normalMatrix"];
+    [swordTrailProgram bindUniform:@"diffuseColor"];
+    
+    [self setupSwordTrail];
 }
 
-- (void)setupGL
+- (void)setupProgram
 {
     GLenum err;
     //[EAGLContext setCurrentContext:self.context];
@@ -207,6 +222,35 @@ GLfloat gCubeVertexData[60] =
      glEnableVertexAttribArray(GLKVertexAttribNormal);
      glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
      */
+    
+    glBindVertexArrayOES(0);
+}
+
+-(void)setupSwordTrail {
+    
+    glUseProgram(swordTrailProgram.programID);
+    
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    
+    glEnable(GL_DEPTH_TEST);
+    
+    //Binds arrays for the sword tail
+    glGenVertexArraysOES(1, &_trailArray);
+    glBindVertexArrayOES(_trailArray);
+    
+    glGenBuffers(1, &_trailBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
+    glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
+    
+    GLuint attribID = [swordTrailProgram getAttributeID:@"position"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    
+    attribID = [swordTrailProgram getAttributeID:@"normal"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
     
     glBindVertexArrayOES(0);
 }
@@ -341,21 +385,23 @@ GLfloat gCubeVertexData[60] =
         }
     }
     
-    /*
+    glUseProgram(swordTrailProgram.programID);
+    
     //Bind and draw swordtail
     glBindVertexArrayOES(_trailArray);
     
     glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
     glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
 
-    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, trail.diffuseColor.v);
+    glUniform4fv([swordTrailProgram getUniformID:@"diffuseColor"], 1, trail.diffuseColor.v);
     
     mvp = GLKMatrix4Multiply(_projectionMatrix, trail.modelMatrix);
-    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, mvp.m);
-    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, trail.normalMatrix.m);
+    glUniformMatrix4fv([swordTrailProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+    glUniformMatrix3fv([swordTrailProgram getUniformID:@"normalMatrix"], 1, 0, trail.normalMatrix.m);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, trail.verticiesToDraw - 1);
-     */
+    
+    glBindVertexArrayOES(0);
 }
 
 #pragma mark Gesture Callbacks
