@@ -25,6 +25,7 @@
 		5AF5E2971A3800CF00E733DA /* square.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2961A3800CF00E733DA /* square.png */; };
 		5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */; };
 		5AF5E29D1A392DED00E733DA /* watercolor_texture_bw_square.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E29C1A392DED00E733DA /* watercolor_texture_bw_square.png */; };
+		5AF5E2A01A3945C500E733DA /* GLSingleProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E29F1A3945C500E733DA /* GLSingleProgram.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		5AF5E2961A3800CF00E733DA /* square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square.png; sourceTree = "<group>"; };
 		5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watercolor_texture_bw.png; sourceTree = "<group>"; };
 		5AF5E29C1A392DED00E733DA /* watercolor_texture_bw_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watercolor_texture_bw_square.png; sourceTree = "<group>"; };
+		5AF5E29E1A3945C500E733DA /* GLSingleProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSingleProgram.h; sourceTree = "<group>"; };
+		5AF5E29F1A3945C500E733DA /* GLSingleProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSingleProgram.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,8 @@
 				5A1EB0501A34D37200DBD03B /* Shader.vsh */,
 				5A1EB0521A34D37200DBD03B /* GameViewController.h */,
 				5A1EB0531A34D37200DBD03B /* GameViewController.m */,
+				5AF5E29E1A3945C500E733DA /* GLSingleProgram.h */,
+				5AF5E29F1A3945C500E733DA /* GLSingleProgram.m */,
 				5AF5E28F1A36DE5800E733DA /* SwordTrail.h */,
 				5AF5E2901A36DE5800E733DA /* SwordTrail.m */,
 				5A1EB07B1A3514FE00DBD03B /* Character.h */,
@@ -270,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1EB08D1A35891A00DBD03B /* Enemy.m in Sources */,
+				5AF5E2A01A3945C500E733DA /* GLSingleProgram.m in Sources */,
 				5AF5E2911A36DE5800E733DA /* SwordTrail.m in Sources */,
 				5A1EB08A1A35890200DBD03B /* Hero.m in Sources */,
 				5A1EB07D1A3514FE00DBD03B /* Character.m in Sources */,

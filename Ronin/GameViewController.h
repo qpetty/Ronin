@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
+#import "GLSingleProgram.h"
+
 @interface GameViewController : GLKViewController
 
 @property (weak) IBOutlet UILabel *highScore;
