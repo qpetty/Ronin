@@ -29,6 +29,8 @@
 		5AF5E2A31A39730300E733DA /* SwordTrail.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A11A39730300E733DA /* SwordTrail.fsh */; };
 		5AF5E2A41A39730300E733DA /* SwordTrail.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A21A39730300E733DA /* SwordTrail.vsh */; };
 		5AF5E2A71A397ED400E733DA /* Ground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A61A397ED400E733DA /* Ground.m */; };
+		5AF5E2AA1A39876F00E733DA /* Background.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A81A39876F00E733DA /* Background.fsh */; };
+		5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A91A39876F00E733DA /* Background.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +79,8 @@
 		5AF5E2A21A39730300E733DA /* SwordTrail.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SwordTrail.vsh; path = Shaders/SwordTrail.vsh; sourceTree = "<group>"; };
 		5AF5E2A51A397ED400E733DA /* Ground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ground.h; sourceTree = "<group>"; };
 		5AF5E2A61A397ED400E733DA /* Ground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ground.m; sourceTree = "<group>"; };
+		5AF5E2A81A39876F00E733DA /* Background.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.fsh; path = Shaders/Background.fsh; sourceTree = "<group>"; };
+		5AF5E2A91A39876F00E733DA /* Background.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.vsh; path = Shaders/Background.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,10 +124,7 @@
 			children = (
 				5A1EB04B1A34D37200DBD03B /* AppDelegate.h */,
 				5A1EB04C1A34D37200DBD03B /* AppDelegate.m */,
-				5A1EB04E1A34D37200DBD03B /* Shader.fsh */,
-				5A1EB0501A34D37200DBD03B /* Shader.vsh */,
-				5AF5E2A11A39730300E733DA /* SwordTrail.fsh */,
-				5AF5E2A21A39730300E733DA /* SwordTrail.vsh */,
+				5AF5E2AC1A39877800E733DA /* Shaders */,
 				5A1EB0521A34D37200DBD03B /* GameViewController.h */,
 				5A1EB0531A34D37200DBD03B /* GameViewController.m */,
 				5AF5E29E1A3945C500E733DA /* GLSingleProgram.h */,
@@ -176,6 +177,19 @@
 				5A1EB0661A34D37200DBD03B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5AF5E2AC1A39877800E733DA /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				5A1EB04E1A34D37200DBD03B /* Shader.fsh */,
+				5A1EB0501A34D37200DBD03B /* Shader.vsh */,
+				5AF5E2A11A39730300E733DA /* SwordTrail.fsh */,
+				5AF5E2A21A39730300E733DA /* SwordTrail.vsh */,
+				5AF5E2A81A39876F00E733DA /* Background.fsh */,
+				5AF5E2A91A39876F00E733DA /* Background.vsh */,
+			);
+			name = Shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,9 +273,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */,
+				5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */,
 				5AF5E2971A3800CF00E733DA /* square.png in Resources */,
 				5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */,
 				5A1EB0571A34D37200DBD03B /* Main.storyboard in Resources */,
+				5AF5E2AA1A39876F00E733DA /* Background.fsh in Resources */,
 				5AF5E2A41A39730300E733DA /* SwordTrail.vsh in Resources */,
 				5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */,
 				5A1EB0591A34D37200DBD03B /* Images.xcassets in Resources */,

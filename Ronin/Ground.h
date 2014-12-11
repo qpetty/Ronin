@@ -8,9 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Ground : NSObject
+@interface Ground : NSObject {
+    @public
+    GLuint glNameVertexArray;
+    GLuint glNameVertexBuffer;
+}
 
-@property GLKVector3 location;
+@property GLKVector4 location;
+
+@property GLfloat *vertexArray;
+@property size_t vertexArraySize;
+@property GLsizei verticiesToDraw;
+
+@property GLKTextureInfo *texInfo;
 
 @property (nonatomic) GLKMatrix4 modelMatrix;
 @property (nonatomic) GLKMatrix3 normalMatrix;

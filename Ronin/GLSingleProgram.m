@@ -152,9 +152,10 @@
     v.name = name;
     
     NSUInteger found = [uniformsArray indexOfObject:v];
-    if (found) {
+    if (found != NSNotFound) {
         return ((UniformVariable*)[uniformsArray objectAtIndex:found]).number;
     }
+    NSLog(@"could not find: %@    look at %@", name, self);
     return (GLuint)0;
 }
 

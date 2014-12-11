@@ -12,6 +12,7 @@
 #import "Hero.h"
 #import "Enemy.h"
 #import "SwordTrail.h"
+#import "Ground.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -28,7 +29,7 @@ GLfloat gCubeVertexData[60] =
 };
 
 @interface GameViewController () {
-    GLSingleProgram *enemyProgram, *swordTrailProgram;
+    GLSingleProgram *enemyProgram, *swordTrailProgram, *backgroundProgram;
     
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
@@ -53,8 +54,10 @@ GLfloat gCubeVertexData[60] =
     NSUInteger enemiesKilled;
     
     SwordTrail *trail;
+    Ground *background;
     
     GLKTextureInfo *spriteTexture0, *spriteTexture1;
+    GLenum err;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -89,6 +92,7 @@ GLfloat gCubeVertexData[60] =
     
     trail = [[SwordTrail alloc] init];
     
+    //Create the enemy and the main character program
     NSString *vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
     NSString *fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
     enemyProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
@@ -109,6 +113,8 @@ GLfloat gCubeVertexData[60] =
     
     [self setupEnemyProgram];
     
+    
+    //Create the Swordtrail program
     vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"SwordTrail" ofType:@"vsh"];
     fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"SwordTrail" ofType:@"fsh"];
     swordTrailProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
@@ -123,11 +129,30 @@ GLfloat gCubeVertexData[60] =
     [swordTrailProgram bindUniform:@"normalMatrix"];
     
     [self setupSwordTrail];
+    
+    
+    //Create Background Program
+    background = [[Ground alloc] init];
+    
+    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Background" ofType:@"vsh"];
+    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Background" ofType:@"fsh"];
+    backgroundProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
+    
+    [backgroundProgram bindAttribs:@"position"];
+    //[backgroundProgram bindAttribs:@"normal"];
+    [backgroundProgram bindAttribs:@"texCoord0"];
+    
+    [backgroundProgram linkProgram];
+    
+    [backgroundProgram bindUniform:@"modelViewProjectionMatrix"];
+    [backgroundProgram bindUniform:@"normalMatrix"];
+    [backgroundProgram bindUniform:@"uTextureMask"];
+
+    [self setupBackground];
 }
 
 - (void)setupEnemyProgram
 {
-    GLenum err;
     //[EAGLContext setCurrentContext:self.context];
     
     glUseProgram(enemyProgram.programID);
@@ -150,9 +175,7 @@ GLfloat gCubeVertexData[60] =
     if (theError) {
         NSLog(@"error loading texture0: %@", theError);
     }
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], 0);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+
     glBindTexture(spriteTexture0.target, spriteTexture0.name);
     if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
@@ -168,9 +191,8 @@ GLfloat gCubeVertexData[60] =
         NSLog(@"error loading texture1: %@", theError);
     }
     
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], 1);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     glBindTexture(spriteTexture1.target, spriteTexture1.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -214,7 +236,7 @@ GLfloat gCubeVertexData[60] =
     glEnable(GL_BLEND);
     
     glEnable(GL_DEPTH_TEST);
-    
+
     //Binds arrays for the sword tail
     glGenVertexArraysOES(1, &_trailArray);
     glBindVertexArrayOES(_trailArray);
@@ -234,6 +256,51 @@ GLfloat gCubeVertexData[60] =
     attribID = [swordTrailProgram getAttributeID:@"color"];
     glEnableVertexAttribArray(attribID);
     glVertexAttribPointer(attribID, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
+    
+    glBindVertexArrayOES(0);
+}
+
+-(void)setupBackground {
+    glUseProgram(backgroundProgram.programID);
+    
+    //glEnable(GL_DEPTH_TEST);
+    
+    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
+    NSError *theError;
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    
+    glActiveTexture(GL_TEXTURE2);
+    background.texInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture0: %@", theError);
+    }
+    
+    glBindTexture(background.texInfo.target, background.texInfo.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    
+    //Binds arrays for the background
+    glGenVertexArraysOES(1, &background->glNameVertexArray);
+    glBindVertexArrayOES(background->glNameVertexArray);
+    
+    glGenBuffers(1, &background->glNameVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, background->glNameVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, background.vertexArraySize, background.vertexArray, GL_STATIC_DRAW);
+    
+    GLuint attribID = [backgroundProgram getAttributeID:@"position"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    
+//    attribID = [backgroundProgram getAttributeID:@"normal"];
+//    glEnableVertexAttribArray(attribID);
+//    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
+    
+    attribID = [backgroundProgram getAttributeID:@"texCoord0"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
     
     glBindVertexArrayOES(0);
 }
@@ -336,13 +403,35 @@ GLfloat gCubeVertexData[60] =
 {
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    GLKMatrix4 mvp;
     
-    glBindVertexArrayOES(_vertexArray);
+    glUseProgram(backgroundProgram.programID);
+    glBindVertexArrayOES(background->glNameVertexArray);
 
+    mvp = GLKMatrix4Multiply(_projectionMatrix, background.modelMatrix);
+    glUniformMatrix4fv([backgroundProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+    
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(background.texInfo.target, background.texInfo.name);
+    glUniform1i([backgroundProgram getUniformID:@"uTextureMask"], 2);
+    
+    if((err = glGetError())){NSLog(@"Background GL Error = %u", err);}
+    glDrawArrays(GL_TRIANGLES, 0, background.verticiesToDraw);
+    
+    
+    
     // Render the object again with ES2
     glUseProgram(enemyProgram.programID);
+    glBindVertexArrayOES(_vertexArray);
     
-    GLKMatrix4 mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(spriteTexture0.target, spriteTexture0.name);
+    glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(spriteTexture1.target, spriteTexture1.name);
+    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], 1);
+    
+    mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
     //Bind and draw Hero
     glUniform4fv([enemyProgram getUniformID:@"diffuseColor"], 1, hero.diffuseColor.v);
@@ -351,6 +440,7 @@ GLfloat gCubeVertexData[60] =
     glUniformMatrix4fv([enemyProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
     glUniformMatrix3fv([enemyProgram getUniformID:@"normalMatrix"], 1, 0, hero.normalMatrix.m);
     
+    if((err = glGetError())){NSLog(@"Hero GL Error = %u", err);}
     glDrawArrays(GL_TRIANGLES, 0, 6);
     
     
@@ -364,23 +454,29 @@ GLfloat gCubeVertexData[60] =
             
             glUniformMatrix4fv([enemyProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
             glUniformMatrix3fv([enemyProgram getUniformID:@"normalMatrix"], 1, 0, en.normalMatrix.m);
+            
+            if((err = glGetError())){NSLog(@"Enemy GL Error = %u", err);}
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
     }
     
-    glUseProgram(swordTrailProgram.programID);
-    
-    //Bind and draw swordtail
-    glBindVertexArrayOES(_trailArray);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
-    glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
+    if (trail.verticiesToDraw) {
 
-    mvp = GLKMatrix4Multiply(_projectionMatrix, trail.modelMatrix);
-    glUniformMatrix4fv([swordTrailProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-    glUniformMatrix3fv([swordTrailProgram getUniformID:@"normalMatrix"], 1, 0, trail.normalMatrix.m);
+        glUseProgram(swordTrailProgram.programID);
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, trail.verticiesToDraw - 1);
+        //Bind and draw swordtail
+        glBindVertexArrayOES(_trailArray);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, _trailBuffer);
+        glBufferData(GL_ARRAY_BUFFER, trail.vertexArraySize, trail.vertexArray, GL_DYNAMIC_DRAW);
+
+        mvp = GLKMatrix4Multiply(_projectionMatrix, trail.modelMatrix);
+        glUniformMatrix4fv([swordTrailProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+        glUniformMatrix3fv([swordTrailProgram getUniformID:@"normalMatrix"], 1, 0, trail.normalMatrix.m);
+        
+        if((err = glGetError())){NSLog(@"SwordTrail GL Error = %u", err);}
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, trail.verticiesToDraw - 1);
+    }
     
     glBindVertexArrayOES(0);
 }
