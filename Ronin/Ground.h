@@ -25,4 +25,6 @@
 @property (nonatomic) GLKMatrix4 modelMatrix;
 @property (nonatomic) GLKMatrix3 normalMatrix;
 
+-(void)drawWithProjectionMatrix:(GLKMatrix4)proj andUniform:(GLuint)var;
+
 @end

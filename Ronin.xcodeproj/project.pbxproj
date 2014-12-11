@@ -31,6 +31,7 @@
 		5AF5E2A71A397ED400E733DA /* Ground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A61A397ED400E733DA /* Ground.m */; };
 		5AF5E2AA1A39876F00E733DA /* Background.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A81A39876F00E733DA /* Background.fsh */; };
 		5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A91A39876F00E733DA /* Background.vsh */; };
+		5AF5E2AE1A3A133300E733DA /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2AD1A3A133300E733DA /* grass.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		5AF5E2A61A397ED400E733DA /* Ground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ground.m; sourceTree = "<group>"; };
 		5AF5E2A81A39876F00E733DA /* Background.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.fsh; path = Shaders/Background.fsh; sourceTree = "<group>"; };
 		5AF5E2A91A39876F00E733DA /* Background.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.vsh; path = Shaders/Background.vsh; sourceTree = "<group>"; };
+		5AF5E2AD1A3A133300E733DA /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
+				5AF5E2AD1A3A133300E733DA /* grass.png */,
 				5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */,
 				5AF5E29C1A392DED00E733DA /* watercolor_texture_bw_square.png */,
 				5AF5E2961A3800CF00E733DA /* square.png */,
@@ -272,6 +275,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AF5E2AE1A3A133300E733DA /* grass.png in Resources */,
 				5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */,
 				5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */,
 				5AF5E2971A3800CF00E733DA /* square.png in Resources */,

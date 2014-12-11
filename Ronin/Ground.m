@@ -8,19 +8,23 @@
 
 #import "Ground.h"
 
+#define SQUARE_SIZE 1.0f
+
 GLfloat square[48] =
 {
     // Data layout for each line below is:
     // positionX, positionY, positionZ,     normalX, normalY, normalZ, texture0x, texture0y,
-    1.0f, 1.0f, 0.0f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-    -1.0f, -1.0f, 0.0f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,         0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-    -1.0f, -1.0f, 0.0f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-    -1.0f, 1.0f, 0.0f,         0.0f, 0.0f, 1.0f,   0.0f, 1.0f
+    SQUARE_SIZE, SQUARE_SIZE, 0.0f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+    -SQUARE_SIZE, -SQUARE_SIZE, 0.0f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+    SQUARE_SIZE, -SQUARE_SIZE, 0.0f,         0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+    SQUARE_SIZE, SQUARE_SIZE, 0.0f,          0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+    -SQUARE_SIZE, -SQUARE_SIZE, 0.0f,        0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+    -SQUARE_SIZE, SQUARE_SIZE, 0.0f,         0.0f, 0.0f, 1.0f,   0.0f, 1.0f
 };
 
-@implementation Ground
+@implementation Ground {
+    GLenum err;
+}
 
 -(instancetype)init {
     self = [super init];
@@ -40,6 +44,31 @@ GLfloat square[48] =
 
 -(GLKMatrix3)normalMatrix {
     return GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(self.modelMatrix), NULL);
+}
+
+-(void)drawWithProjectionMatrix:(GLKMatrix4)proj andUniform:(GLuint)var {
+    GLKMatrix4 mvp, newModel = self.modelMatrix;
+
+    float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
+    int size = 7;
+    
+    newModel.m30 = -(float)(size / 2) * increment;
+    newModel.m31 = -(float)(size / 2) * increment;
+    
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            mvp = GLKMatrix4Multiply(proj, newModel);
+            
+            glUniformMatrix4fv(var, 1, 0, mvp.m);
+            if((err = glGetError())){NSLog(@"Ground GL Error = %u", err);}
+            glDrawArrays(GL_TRIANGLES, 0, self.verticiesToDraw);
+            
+            newModel.m31 += increment;// * (float)size;
+            newModel.m32 += 0.01;
+        }
+        newModel.m31 = -(float)(size / 2) * increment;// * (float)size;
+        newModel.m30 += increment;// * (float)size;
+    }
 }
 
 @end

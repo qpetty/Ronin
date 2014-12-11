@@ -157,9 +157,10 @@ GLfloat gCubeVertexData[60] =
     
     glUseProgram(enemyProgram.programID);
     
+    glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
+    //glBlendFunc (GL_ONE, GL_ONE);
     
     glEnable(GL_DEPTH_TEST);
     
@@ -263,14 +264,20 @@ GLfloat gCubeVertexData[60] =
 -(void)setupBackground {
     glUseProgram(backgroundProgram.programID);
     
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc (GL_ONE, GL_ONE);
+    
+    glEnable(GL_DEPTH_TEST);
     
     NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
     NSError *theError;
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"grass" ofType:@"png"];
     
     glActiveTexture(GL_TEXTURE2);
     background.texInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
@@ -280,7 +287,6 @@ GLfloat gCubeVertexData[60] =
     
     glBindTexture(background.texInfo.target, background.texInfo.name);
     if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    
     
     //Binds arrays for the background
     glGenVertexArraysOES(1, &background->glNameVertexArray);
@@ -376,6 +382,7 @@ GLfloat gCubeVertexData[60] =
 {
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     _projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+    //_projectionMatrix = GLKMatrix4MakeOrtho(-4.0f, 4.0f, -4.0f, 4.0f, 0.1f, 100.0f);
     
     [hero update];
     
@@ -403,22 +410,24 @@ GLfloat gCubeVertexData[60] =
 {
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     GLKMatrix4 mvp;
     
     glUseProgram(backgroundProgram.programID);
     glBindVertexArrayOES(background->glNameVertexArray);
 
-    mvp = GLKMatrix4Multiply(_projectionMatrix, background.modelMatrix);
-    glUniformMatrix4fv([backgroundProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-    
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(background.texInfo.target, background.texInfo.name);
-    glUniform1i([backgroundProgram getUniformID:@"uTextureMask"], 2);
+    glUniform1i([backgroundProgram getUniformID:@"uTextureMask"], background.texInfo.name - 1);
     
     if((err = glGetError())){NSLog(@"Background GL Error = %u", err);}
-    glDrawArrays(GL_TRIANGLES, 0, background.verticiesToDraw);
+    [background drawWithProjectionMatrix:_projectionMatrix andUniform:[backgroundProgram getUniformID:@"modelViewProjectionMatrix"]];
     
-    
+//    mvp = GLKMatrix4Multiply(_projectionMatrix, background.modelMatrix);
+//    glUniformMatrix4fv([backgroundProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+//    
+//    if((err = glGetError())){NSLog(@"Background GL Error = %u", err);}
+//    glDrawArrays(GL_TRIANGLES, 0, background.verticiesToDraw);
     
     // Render the object again with ES2
     glUseProgram(enemyProgram.programID);
@@ -426,10 +435,10 @@ GLfloat gCubeVertexData[60] =
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(spriteTexture0.target, spriteTexture0.name);
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], 0);
+    glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], spriteTexture0.name - 1);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(spriteTexture1.target, spriteTexture1.name);
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], 1);
+    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], spriteTexture1.name - 1);
     
     mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
