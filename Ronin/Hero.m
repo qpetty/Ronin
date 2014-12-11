@@ -17,17 +17,22 @@
     self = [super init];
     if (self) {
         self.diffuseColor = GLKVector4Make(0.4f, 0.6f, 0.4f, 1.0f);
-        self.health = self.maxHealth = HERO_STARTING_HEALTH;
+        [self reInit];
         
         self.vertexArray = samuraiVerts;
         self.vertexArraySize = samuraiNumVerts * 3 * sizeof(GLfloat);
         self.verticiesToDraw = samuraiNumVerts;
+        
+        self.normalArray = samuraiNormals;
+        NSLog(@"samurai normals size: %lu and verts: %lu", sizeof(samuraiNormals), self.vertexArraySize);
+        self.normalArraySize = sizeof(samuraiNormals);
     }
     return self;
 }
 
 -(void)reInit {
     self.health = self.maxHealth = HERO_STARTING_HEALTH;
+    self.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
 }
 
 -(void)update {

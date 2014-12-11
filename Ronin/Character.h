@@ -26,7 +26,7 @@
 @property GLKMatrix3 randomMat;
 
 @property (nonatomic) GLKMatrix4 modelMatrix;
-@property (nonatomic) GLKMatrix3 normalMatrix;
+@property (nonatomic) GLKMatrix4 normalMatrix;
 
 - (void)update;
 

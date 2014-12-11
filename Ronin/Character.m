@@ -38,8 +38,8 @@
     return GLKMatrix4MakeTranslation(self.location.x, self.location.y, self.location.z);
 }
 
--(GLKMatrix3)normalMatrix {
-    return GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(self.modelMatrix), NULL);
+-(GLKMatrix4)normalMatrix {
+    return GLKMatrix4InvertAndTranspose(self.modelMatrix, NULL);
 }
 
 -(void)update {

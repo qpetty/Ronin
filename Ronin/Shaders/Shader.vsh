@@ -16,14 +16,14 @@ varying lowp vec2 texCoords0;
 varying lowp vec2 texCoords1;
 
 uniform mat4 modelViewProjectionMatrix;
-uniform mat3 normalMatrix;
+uniform mat4 normalMatrix;
 uniform vec4 diffuseColor;
 
 uniform mat3 uRandNum;
 
 void main()
 {
-    vec3 eyeNormal = normalize(normalMatrix * normal);
+    vec3 eyeNormal = normalize(normalMatrix * vec4(normal, 1.0)).xyz;
     vec3 lightPosition = vec3(0.0, 0.0, 1.0);
     
     float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));

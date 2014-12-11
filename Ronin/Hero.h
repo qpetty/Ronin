@@ -12,12 +12,18 @@
     @public
     GLuint glNameVertexArray;
     GLuint glNameVertexBuffer;
+    
+    GLuint glNameNormalArray;
+    GLuint glNameNormalBuffer;
 }
 
 
 @property GLfloat *vertexArray;
 @property size_t vertexArraySize;
 @property GLsizei verticiesToDraw;
+
+@property GLfloat *normalArray;
+@property size_t normalArraySize;
 
 @property GLKVector3 destination;
 @property GLKVector3 movementInterval;

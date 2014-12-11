@@ -9,6 +9,7 @@
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
 
+
 #import "Hero.h"
 #import "Enemy.h"
 #import "SwordTrail.h"
@@ -95,19 +96,19 @@ GLfloat gCubeVertexData[60] =
     trail = [[SwordTrail alloc] init];
     
     //Create the main character program
-    NSString *vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
-    NSString *fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
+    NSString *vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Hero" ofType:@"vsh"];
+    NSString *fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Hero" ofType:@"fsh"];
     heroProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
     
     [heroProgram bindAttribs:@"position"];
+    [heroProgram bindAttribs:@"normal"];
     
     [heroProgram linkProgram];
     
     [heroProgram bindUniform:@"modelViewProjectionMatrix"];
     [heroProgram bindUniform:@"normalMatrix"];
+    [heroProgram bindUniform:@"modelViewMatrix"];
     [heroProgram bindUniform:@"diffuseColor"];
-    [heroProgram bindUniform:@"uTextureMask0"];
-    [heroProgram bindUniform:@"uTextureMask1"];
     [heroProgram bindUniform:@"uRandNum"];
     
     [self setupHeroProgram];
@@ -173,8 +174,6 @@ GLfloat gCubeVertexData[60] =
 
 - (void)setupHeroProgram
 {
-    //[EAGLContext setCurrentContext:self.context];
-    
     glUseProgram(heroProgram.programID);
     
     glEnable(GL_BLEND);
@@ -230,16 +229,22 @@ GLfloat gCubeVertexData[60] =
     glBufferData(GL_ARRAY_BUFFER, hero.vertexArraySize, hero.vertexArray, GL_STATIC_DRAW);
     
     GLuint attribID = [heroProgram getAttributeID:@"position"];
-    glEnableVertexAttribArray(attribID);
     glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(attribID);
+
+    glGenBuffers(1, &hero->glNameNormalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, hero->glNameNormalBuffer);
+    glBufferData(GL_ARRAY_BUFFER, hero.normalArraySize, hero.normalArray, GL_STATIC_DRAW);
+    
+    attribID = [heroProgram getAttributeID:@"normal"];
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(attribID);
     
     glBindVertexArrayOES(0);
 }
 
 - (void)setupEnemyProgram
 {
-    //[EAGLContext setCurrentContext:self.context];
-    
     glUseProgram(enemyProgram.programID);
     
     glEnable(GL_BLEND);
@@ -347,11 +352,7 @@ GLfloat gCubeVertexData[60] =
     GLuint attribID = [backgroundProgram getAttributeID:@"position"];
     glEnableVertexAttribArray(attribID);
     glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(0));
-    
-//    attribID = [backgroundProgram getAttributeID:@"normal"];
-//    glEnableVertexAttribArray(attribID);
-//    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(3 * sizeof(GLfloat)));
-    
+
     attribID = [backgroundProgram getAttributeID:@"texCoord0"];
     glEnableVertexAttribArray(attribID);
     glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), BUFFER_OFFSET(6 * sizeof(GLfloat)));
@@ -473,8 +474,9 @@ GLfloat gCubeVertexData[60] =
     
     // Render the object again with ES2
     glUseProgram(heroProgram.programID);
-    glBindVertexArrayOES(hero->glNameVertexArray);
     
+    glBindVertexArrayOES(hero->glNameVertexArray);
+
     mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
     
     //Bind and draw Hero
@@ -482,7 +484,9 @@ GLfloat gCubeVertexData[60] =
     glUniformMatrix3fv([heroProgram getUniformID:@"uRandNum"], 1, 0, hero.randomMat.m);
     
     glUniformMatrix4fv([heroProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-    glUniformMatrix3fv([heroProgram getUniformID:@"normalMatrix"], 1, 0, hero.normalMatrix.m);
+    
+    glUniformMatrix4fv([heroProgram getUniformID:@"modelViewMatrix"], 1, 0, hero.modelMatrix.m);
+    glUniformMatrix4fv([heroProgram getUniformID:@"normalMatrix"], 1, 0, hero.normalMatrix.m);
     
     if((err = glGetError())){NSLog(@"Hero GL Error = %u", err);}
     glDrawArrays(GL_TRIANGLES, 0, hero.verticiesToDraw - 1);
@@ -507,7 +511,7 @@ GLfloat gCubeVertexData[60] =
             glUniformMatrix3fv([enemyProgram getUniformID:@"uRandNum"], 1, 0, en.randomMat.m);
             
             glUniformMatrix4fv([enemyProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-            glUniformMatrix3fv([enemyProgram getUniformID:@"normalMatrix"], 1, 0, en.normalMatrix.m);
+            glUniformMatrix4fv([enemyProgram getUniformID:@"normalMatrix"], 1, 0, en.normalMatrix.m);
             
             if((err = glGetError())){NSLog(@"Enemy GL Error = %u", err);}
             glDrawArrays(GL_TRIANGLES, 0, 6);

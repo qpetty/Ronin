@@ -32,6 +32,8 @@
 		5AF5E2AA1A39876F00E733DA /* Background.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A81A39876F00E733DA /* Background.fsh */; };
 		5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2A91A39876F00E733DA /* Background.vsh */; };
 		5AF5E2AE1A3A133300E733DA /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2AD1A3A133300E733DA /* grass.png */; };
+		5AF5E2B21A3A33B700E733DA /* Hero.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B01A3A33B700E733DA /* Hero.fsh */; };
+		5AF5E2B31A3A33B700E733DA /* Hero.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B11A3A33B700E733DA /* Hero.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,8 @@
 		5AF5E2A91A39876F00E733DA /* Background.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.vsh; path = Shaders/Background.vsh; sourceTree = "<group>"; };
 		5AF5E2AD1A3A133300E733DA /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
 		5AF5E2AF1A3A2B4900E733DA /* samurai.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = samurai.h; sourceTree = "<group>"; };
+		5AF5E2B01A3A33B700E733DA /* Hero.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Hero.fsh; path = Shaders/Hero.fsh; sourceTree = "<group>"; };
+		5AF5E2B11A3A33B700E733DA /* Hero.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Hero.vsh; path = Shaders/Hero.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +197,8 @@
 				5AF5E2A21A39730300E733DA /* SwordTrail.vsh */,
 				5AF5E2A81A39876F00E733DA /* Background.fsh */,
 				5AF5E2A91A39876F00E733DA /* Background.vsh */,
+				5AF5E2B01A3A33B700E733DA /* Hero.fsh */,
+				5AF5E2B11A3A33B700E733DA /* Hero.vsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -282,8 +288,10 @@
 				5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */,
 				5AF5E2971A3800CF00E733DA /* square.png in Resources */,
 				5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */,
+				5AF5E2B21A3A33B700E733DA /* Hero.fsh in Resources */,
 				5A1EB0571A34D37200DBD03B /* Main.storyboard in Resources */,
 				5AF5E2AA1A39876F00E733DA /* Background.fsh in Resources */,
+				5AF5E2B31A3A33B700E733DA /* Hero.vsh in Resources */,
 				5AF5E2A41A39730300E733DA /* SwordTrail.vsh in Resources */,
 				5AF5E2951A37D20800E733DA /* mustang.bmp in Resources */,
 				5A1EB0591A34D37200DBD03B /* Images.xcassets in Resources */,
