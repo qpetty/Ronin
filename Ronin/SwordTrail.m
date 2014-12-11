@@ -32,7 +32,7 @@
     if (self) {
         self.point = CGPointMake(vec.x, vec.y);
         distance = 0.02;
-        self.life = 20;
+        self.life = 15;
         self.isAlive = YES;
         
         self.diffuseColor = GLKVector4Make(1.0f, 1.0f, 1.0f, 0.8f);
@@ -110,8 +110,6 @@
     
     self.verticiesToDraw = (GLsizei)(self.points.count * 2);
     
-    NSMutableIndexSet *indeciesToRemove = [[NSMutableIndexSet alloc] init];
-    
     [self.points enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         TouchPoint *singlePoint = (TouchPoint*)obj;
         [singlePoint update];
@@ -142,13 +140,7 @@
         vertexData[idx * offset + 17] = singlePoint.diffuseColor.y;
         vertexData[idx * offset + 18] = singlePoint.diffuseColor.z;
         vertexData[idx * offset + 19] = singlePoint.diffuseColor.w;
-        
-        if (singlePoint.isAlive == NO) {
-            [indeciesToRemove addIndex:idx];
-        }
     }];
-    
-    [self.points removeObjectsAtIndexes:indeciesToRemove];
 }
 
 -(GLKMatrix4)modelMatrix {

@@ -83,6 +83,7 @@
 		5AF5E2A81A39876F00E733DA /* Background.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.fsh; path = Shaders/Background.fsh; sourceTree = "<group>"; };
 		5AF5E2A91A39876F00E733DA /* Background.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Background.vsh; path = Shaders/Background.vsh; sourceTree = "<group>"; };
 		5AF5E2AD1A3A133300E733DA /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
+		5AF5E2AF1A3A2B4900E733DA /* samurai.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = samurai.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +142,7 @@
 				5A1EB08C1A35891A00DBD03B /* Enemy.m */,
 				5AF5E2A51A397ED400E733DA /* Ground.h */,
 				5AF5E2A61A397ED400E733DA /* Ground.m */,
+				5AF5E2AF1A3A2B4900E733DA /* samurai.h */,
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,

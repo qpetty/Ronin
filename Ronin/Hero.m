@@ -7,6 +7,7 @@
 //
 
 #import "Hero.h"
+#import "samurai.h"
 
 #define HERO_STARTING_HEALTH 3
 
@@ -17,8 +18,16 @@
     if (self) {
         self.diffuseColor = GLKVector4Make(0.4f, 0.6f, 0.4f, 1.0f);
         self.health = self.maxHealth = HERO_STARTING_HEALTH;
+        
+        self.vertexArray = samuraiVerts;
+        self.vertexArraySize = samuraiNumVerts * 3 * sizeof(GLfloat);
+        self.verticiesToDraw = samuraiNumVerts;
     }
     return self;
+}
+
+-(void)reInit {
+    self.health = self.maxHealth = HERO_STARTING_HEALTH;
 }
 
 -(void)update {

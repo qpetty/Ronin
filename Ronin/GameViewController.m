@@ -29,7 +29,7 @@ GLfloat gCubeVertexData[60] =
 };
 
 @interface GameViewController () {
-    GLSingleProgram *enemyProgram, *swordTrailProgram, *backgroundProgram;
+    GLSingleProgram *heroProgram, *enemyProgram, *swordTrailProgram, *backgroundProgram;
     
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
@@ -91,11 +91,30 @@ GLfloat gCubeVertexData[60] =
     self.preferredFramesPerSecond = 60.0;
     [EAGLContext setCurrentContext:self.context];
     
+    hero = [[Hero alloc] init];
     trail = [[SwordTrail alloc] init];
     
-    //Create the enemy and the main character program
+    //Create the main character program
     NSString *vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
     NSString *fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
+    heroProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
+    
+    [heroProgram bindAttribs:@"position"];
+    
+    [heroProgram linkProgram];
+    
+    [heroProgram bindUniform:@"modelViewProjectionMatrix"];
+    [heroProgram bindUniform:@"normalMatrix"];
+    [heroProgram bindUniform:@"diffuseColor"];
+    [heroProgram bindUniform:@"uTextureMask0"];
+    [heroProgram bindUniform:@"uTextureMask1"];
+    [heroProgram bindUniform:@"uRandNum"];
+    
+    [self setupHeroProgram];
+    
+    //Create the enemy and the main character program
+    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
+    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"fsh"];
     enemyProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
     
     [enemyProgram bindAttribs:@"position"];
@@ -152,11 +171,11 @@ GLfloat gCubeVertexData[60] =
     [self setupBackground];
 }
 
-- (void)setupEnemyProgram
+- (void)setupHeroProgram
 {
     //[EAGLContext setCurrentContext:self.context];
     
-    glUseProgram(enemyProgram.programID);
+    glUseProgram(heroProgram.programID);
     
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
@@ -177,7 +196,7 @@ GLfloat gCubeVertexData[60] =
     if (theError) {
         NSLog(@"error loading texture0: %@", theError);
     }
-
+    
     glBindTexture(spriteTexture0.target, spriteTexture0.name);
     if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
@@ -201,6 +220,34 @@ GLfloat gCubeVertexData[60] =
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    //Binds arrays for the characters
+    glGenVertexArraysOES(1, &hero->glNameVertexArray);
+    glBindVertexArrayOES(hero->glNameVertexArray);
+    
+    glGenBuffers(1, &hero->glNameVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, hero->glNameVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, hero.vertexArraySize, hero.vertexArray, GL_STATIC_DRAW);
+    
+    GLuint attribID = [heroProgram getAttributeID:@"position"];
+    glEnableVertexAttribArray(attribID);
+    glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), BUFFER_OFFSET(0));
+    
+    glBindVertexArrayOES(0);
+}
+
+- (void)setupEnemyProgram
+{
+    //[EAGLContext setCurrentContext:self.context];
+    
+    glUseProgram(enemyProgram.programID);
+    
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc (GL_ONE, GL_ONE);
+    
+    glEnable(GL_DEPTH_TEST);
     
     //Binds arrays for the characters
     glGenVertexArraysOES(1, &_vertexArray);
@@ -314,7 +361,7 @@ GLfloat gCubeVertexData[60] =
 
 -(void)setupGame {
     srand((unsigned int)time(0));
-    hero = [[Hero alloc] init];
+    [hero reInit];
     hero.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
     
     allEnemies = [[NSMutableArray alloc] init];
@@ -423,13 +470,25 @@ GLfloat gCubeVertexData[60] =
     if((err = glGetError())){NSLog(@"Background GL Error = %u", err);}
     [background drawWithProjectionMatrix:_projectionMatrix andUniform:[backgroundProgram getUniformID:@"modelViewProjectionMatrix"]];
     
-//    mvp = GLKMatrix4Multiply(_projectionMatrix, background.modelMatrix);
-//    glUniformMatrix4fv([backgroundProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-//    
-//    if((err = glGetError())){NSLog(@"Background GL Error = %u", err);}
-//    glDrawArrays(GL_TRIANGLES, 0, background.verticiesToDraw);
     
     // Render the object again with ES2
+    glUseProgram(heroProgram.programID);
+    glBindVertexArrayOES(hero->glNameVertexArray);
+    
+    mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
+    
+    //Bind and draw Hero
+    glUniform4fv([heroProgram getUniformID:@"diffuseColor"], 1, hero.diffuseColor.v);
+    glUniformMatrix3fv([heroProgram getUniformID:@"uRandNum"], 1, 0, hero.randomMat.m);
+    
+    glUniformMatrix4fv([heroProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
+    glUniformMatrix3fv([heroProgram getUniformID:@"normalMatrix"], 1, 0, hero.normalMatrix.m);
+    
+    if((err = glGetError())){NSLog(@"Hero GL Error = %u", err);}
+    glDrawArrays(GL_TRIANGLES, 0, hero.verticiesToDraw - 1);
+    
+    
+    //Bind and draw Enemies
     glUseProgram(enemyProgram.programID);
     glBindVertexArrayOES(_vertexArray);
     
@@ -440,20 +499,6 @@ GLfloat gCubeVertexData[60] =
     glBindTexture(spriteTexture1.target, spriteTexture1.name);
     glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], spriteTexture1.name - 1);
     
-    mvp = GLKMatrix4Multiply(_projectionMatrix, hero.modelMatrix);
-    
-    //Bind and draw Hero
-    glUniform4fv([enemyProgram getUniformID:@"diffuseColor"], 1, hero.diffuseColor.v);
-    glUniformMatrix3fv([enemyProgram getUniformID:@"uRandNum"], 1, 0, hero.randomMat.m);
-    
-    glUniformMatrix4fv([enemyProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
-    glUniformMatrix3fv([enemyProgram getUniformID:@"normalMatrix"], 1, 0, hero.normalMatrix.m);
-    
-    if((err = glGetError())){NSLog(@"Hero GL Error = %u", err);}
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    
-    //Bind and draw Enemies
     for (Enemy *en in allEnemies) {
         if (en.isVisible) {
             mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
