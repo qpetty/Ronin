@@ -54,4 +54,35 @@
     self.destination = enemy.location;
 }
 
+-(GLKMatrix4)modelMatrix {
+    GLKMatrix4 old = [super modelMatrix];
+    
+    GLKVector3 toDestination = GLKVector3Subtract(self.destination, self.location);
+
+    float initialX = M_PI_2 - 1.0;
+
+    if (GLKVector3Length(toDestination) < 0.05) {
+        old = GLKMatrix4RotateX(old, initialX);
+        return old;
+    }
+
+    float angle = acosf(GLKVector2DotProduct(GLKVector2Make(1.0f, 0.0f), GLKVector2Make(toDestination.x, toDestination.y)));
+    if (isnan(angle)) {
+        angle = 0;
+    }
+    
+    angle -= M_PI_2;
+    float xAngle = initialX;
+    
+    if (toDestination.y < 0.0) {
+        angle = -angle;
+        xAngle = xAngle + M_PI_2;
+    }
+
+    old = GLKMatrix4RotateX(old, xAngle);
+    old = GLKMatrix4RotateZ(old, angle);
+    
+    return old;
+}
+
 @end
