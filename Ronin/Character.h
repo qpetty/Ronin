@@ -11,7 +11,7 @@
 #import <GLKit/GLKit.h>
 
 #ifndef TEXTURE_BOX_SIZE
-#define TEXTURE_BOX_SIZE 0.25f
+#define TEXTURE_BOX_SIZE 0.5f
 #endif
 
 @interface Character : NSObject
