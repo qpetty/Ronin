@@ -57,7 +57,7 @@ GLfloat gCubeVertexData[60] =
     SwordTrail *trail;
     Ground *background;
     
-    GLKTextureInfo *spriteTexture0, *spriteTexture1;
+    GLKTextureInfo *spriteTexture0, *spriteTexture1, *spriteTexture2;
     GLenum err;
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -160,7 +160,6 @@ GLfloat gCubeVertexData[60] =
     backgroundProgram = [[GLSingleProgram alloc] initWithVertexShader:vertShaderPathname andFragmentShader:fragShaderPathname];
     
     [backgroundProgram bindAttribs:@"position"];
-    //[backgroundProgram bindAttribs:@"normal"];
     [backgroundProgram bindAttribs:@"texCoord0"];
     
     [backgroundProgram linkProgram];
@@ -182,43 +181,6 @@ GLfloat gCubeVertexData[60] =
     //glBlendFunc (GL_ONE, GL_ONE);
     
     glEnable(GL_DEPTH_TEST);
-    
-    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
-    NSError *theError;
-    
-    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
-    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
-    
-    glActiveTexture(GL_TEXTURE0);
-    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
-    if (theError) {
-        NSLog(@"error loading texture0: %@", theError);
-    }
-    
-    glBindTexture(spriteTexture0.target, spriteTexture0.name);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    
-    //filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
-    //filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
-    //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
-    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
-    
-    //NSLog(@"filepath: %@", filePath);
-    glActiveTexture(GL_TEXTURE1);
-    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
-    if (theError) {
-        NSLog(@"error loading texture1: %@", theError);
-    }
-    
-    glBindTexture(spriteTexture1.target, spriteTexture1.name);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
-    
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
     //Binds arrays for the characters
     glGenVertexArraysOES(1, &hero->glNameVertexArray);
@@ -253,6 +215,55 @@ GLfloat gCubeVertexData[60] =
     //glBlendFunc (GL_ONE, GL_ONE);
     
     glEnable(GL_DEPTH_TEST);
+    
+    NSDictionary *textureLoaderOptions = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
+    NSError *theError;
+    
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    
+    glActiveTexture(GL_TEXTURE0);
+    spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture0: %@", theError);
+    }
+    
+    glBindTexture(spriteTexture0.target, spriteTexture0.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    
+    //NSLog(@"filepath: %@", filePath);
+    glActiveTexture(GL_TEXTURE1);
+    spriteTexture1 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture1: %@", theError);
+    }
+    
+    glBindTexture(spriteTexture1.target, spriteTexture1.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    //filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    //filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw" ofType:@"png"];
+    //filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
+    filePath = [[NSBundle mainBundle] pathForResource:@"watercolor_texture_bw_square" ofType:@"png"];
+    
+    //NSLog(@"filepath: %@", filePath);
+    glActiveTexture(GL_TEXTURE2);
+    spriteTexture2 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
+    if (theError) {
+        NSLog(@"error loading texture1: %@", theError);
+    }
+    
+    glBindTexture(spriteTexture2.target, spriteTexture2.name);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
+    
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
     //Binds arrays for the characters
     glGenVertexArraysOES(1, &_vertexArray);
@@ -332,7 +343,7 @@ GLfloat gCubeVertexData[60] =
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"grass" ofType:@"png"];
     
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(GL_TEXTURE3);
     background.texInfo = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
     if (theError) {
         NSLog(@"error loading texture0: %@", theError);
@@ -466,7 +477,7 @@ GLfloat gCubeVertexData[60] =
     glUseProgram(backgroundProgram.programID);
     glBindVertexArrayOES(background->glNameVertexArray);
 
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(background.texInfo.target, background.texInfo.name);
     glUniform1i([backgroundProgram getUniformID:@"uTextureMask"], background.texInfo.name - 1);
     
@@ -498,15 +509,23 @@ GLfloat gCubeVertexData[60] =
     glUseProgram(enemyProgram.programID);
     glBindVertexArrayOES(_vertexArray);
     
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(spriteTexture0.target, spriteTexture0.name);
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], spriteTexture0.name - 1);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(spriteTexture1.target, spriteTexture1.name);
-    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], spriteTexture1.name - 1);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(spriteTexture2.target, spriteTexture2.name);
+    glUniform1i([enemyProgram getUniformID:@"uTextureMask1"], spriteTexture2.name - 1);
     
     for (Enemy *en in allEnemies) {
         if (en.isVisible) {
+            
+            if (en.textureNum == 0) {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(spriteTexture0.target, spriteTexture0.name);
+                glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], spriteTexture0.name - 1);
+            } else {
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(spriteTexture1.target, spriteTexture1.name);
+                glUniform1i([enemyProgram getUniformID:@"uTextureMask0"], spriteTexture1.name - 1);
+            }
+            
             mvp = GLKMatrix4Multiply(_projectionMatrix, en.modelMatrix);
             
             glUniform4fv([enemyProgram getUniformID:@"diffuseColor"], 1, en.diffuseColor.v);

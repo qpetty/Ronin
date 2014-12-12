@@ -12,6 +12,7 @@
 
 @property Character *target;
 @property NSUInteger spawnDelay;
+@property NSUInteger textureNum;
 
 -(instancetype)initWithDepth:(float)depth;
 -(void)bump:(GLKVector4)bumpPoint;

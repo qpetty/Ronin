@@ -9,8 +9,11 @@
 #import "Enemy.h"
 
 #define MAX_HEALTH 2
+#define ANIMATION_INTERVAL 10
 
-@implementation Enemy
+@implementation Enemy {
+    NSInteger animateCounter;
+}
 
 -(instancetype)initWithDepth:(float)depth {
     self = [self init];
@@ -33,6 +36,8 @@
         self.diffuseColor = GLKVector4Make(1.0f, 0.0f, 0.0f, 1.0f);
     }
     
+    animateCounter = ANIMATION_INTERVAL;
+    self.textureNum = 0;
     self.isVisible = YES;
 }
 
@@ -43,6 +48,15 @@
 
 -(void)update {
     float step = 0.01;
+    
+    if (--animateCounter <= 0) {
+        if (self.textureNum == 0) {
+            self.textureNum = 1;
+        } else {
+            self.textureNum = 0;
+        }
+        animateCounter = ANIMATION_INTERVAL;
+    }
     
     if (self.isVisible == NO && self.spawnDelay == 0) {
         [self respawn];
