@@ -377,10 +377,12 @@ GLfloat gCubeVertexData[60] =
     hero.location = GLKVector3Make(0.0f, 0.0f, -5.0f);
     
     allEnemies = [[NSMutableArray alloc] init];
+    float depth = -5.0;
     for (NSUInteger i = 0; i < 6; i++) {
-        Enemy *en = [[Enemy alloc] initWithDepth:-5.0];
+        Enemy *en = [[Enemy alloc] initWithDepth:depth];
         en.target = hero;
         [allEnemies addObject:en];
+        depth += 0.01;
     }
     enemiesKilled = 0;
     [self updateHUD];
