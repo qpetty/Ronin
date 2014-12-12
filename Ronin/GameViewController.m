@@ -446,6 +446,8 @@ GLfloat gCubeVertexData[60] =
         en.location = GLKVector3Add(en.location, worldMove);
     }
     
+    background.location = GLKVector4Add(background.location, GLKVector4MakeWithVector3(worldMove, 0.0));
+    
     [trail update];
     
     [self updateHUD];

@@ -8,7 +8,7 @@
 
 #import "Ground.h"
 
-#define SQUARE_SIZE 2.5f
+#define SQUARE_SIZE 3.0f
 
 GLfloat square[48] =
 {
@@ -49,11 +49,31 @@ GLfloat square[48] =
 -(void)drawWithProjectionMatrix:(GLKMatrix4)proj andUniform:(GLuint)var {
     GLKMatrix4 mvp, newModel = self.modelMatrix;
 
-    float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
-    int size = 3;
+    NSLog(@"location: (%f, %f)", self.location.x,self.location.y);
     
-    newModel.m30 = -(float)(size / 2) * increment;
-    newModel.m31 = -(float)(size / 2) * increment;
+    float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
+    
+    //Make sure that we can't run off the ground
+    if (self.location.x > increment) {
+        self.location = GLKVector4Make(self.location.x - increment, self.location.y, self.location.z, self.location.w);
+    }
+    
+    if (self.location.x < -increment) {
+        self.location = GLKVector4Make(self.location.x + increment, self.location.y, self.location.z, self.location.w);
+    }
+    
+    if (self.location.y > -increment) {
+        self.location = GLKVector4Make(self.location.x, self.location.y - increment, self.location.z, self.location.w);
+    }
+    
+    if (self.location.y < -increment) {
+        self.location = GLKVector4Make(self.location.x, self.location.y + increment, self.location.z, self.location.w);
+    }
+    
+    int size = 5;
+    
+    newModel.m30 = self.location.x - (float)(size / 2) * increment;
+    newModel.m31 = self.location.y - (float)(size / 2) * increment;
     
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -63,11 +83,11 @@ GLfloat square[48] =
             if((err = glGetError())){NSLog(@"Ground GL Error = %u", err);}
             glDrawArrays(GL_TRIANGLES, 0, self.verticiesToDraw);
             
-            newModel.m31 += increment;// * (float)size;
+            newModel.m31 += increment;
             newModel.m32 += 0.001;
         }
-        newModel.m31 = -(float)(size / 2) * increment;// * (float)size;
-        newModel.m30 += increment;// * (float)size;
+        newModel.m30 += increment;
+        newModel.m31 = self.location.y - (float)(size / 2) * increment;
     }
 }
 
