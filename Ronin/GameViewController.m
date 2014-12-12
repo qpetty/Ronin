@@ -109,7 +109,6 @@ GLfloat gCubeVertexData[60] =
     [heroProgram bindUniform:@"normalMatrix"];
     [heroProgram bindUniform:@"modelViewMatrix"];
     [heroProgram bindUniform:@"diffuseColor"];
-    [heroProgram bindUniform:@"uRandNum"];
     
     [self setupHeroProgram];
     
@@ -494,7 +493,6 @@ GLfloat gCubeVertexData[60] =
     
     //Bind and draw Hero
     glUniform4fv([heroProgram getUniformID:@"diffuseColor"], 1, hero.diffuseColor.v);
-    glUniformMatrix3fv([heroProgram getUniformID:@"uRandNum"], 1, 0, hero.randomMat.m);
     
     glUniformMatrix4fv([heroProgram getUniformID:@"modelViewProjectionMatrix"], 1, 0, mvp.m);
     

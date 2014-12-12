@@ -24,7 +24,6 @@
         self.verticiesToDraw = samuraiNumVerts;
         
         self.normalArray = samuraiNormals;
-        NSLog(@"samurai normals size: %lu and verts: %lu", sizeof(samuraiNormals), self.vertexArraySize);
         self.normalArraySize = sizeof(samuraiNormals);
     }
     return self;

@@ -49,8 +49,6 @@ GLfloat square[48] =
 -(void)drawWithProjectionMatrix:(GLKMatrix4)proj andUniform:(GLuint)var {
     GLKMatrix4 mvp, newModel = self.modelMatrix;
 
-    NSLog(@"location: (%f, %f)", self.location.x,self.location.y);
-    
     float increment = 2.0 * SQUARE_SIZE * (2.0 / 3.0);
     
     //Make sure that we can't run off the ground
