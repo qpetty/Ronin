@@ -28,7 +28,7 @@ void main()
     
     float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));
                  
-    colorVarying = diffuseColor * nDotVP;
+    colorVarying = diffuseColor;// * nDotVP;
     
     texCoords0 = texCoord0;
     texCoords1 = (uRandNum * vec3(texCoord1, 1.0)).xy;

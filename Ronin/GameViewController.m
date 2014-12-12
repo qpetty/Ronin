@@ -220,7 +220,8 @@ GLfloat gCubeVertexData[60] =
     
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
     //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ChristmasPresent" ofType:@"png"];
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"square" ofType:@"png"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"mon1_sprite_0" ofType:@"png"];
     
     glActiveTexture(GL_TEXTURE0);
     spriteTexture0 = [GLKTextureLoader textureWithContentsOfFile:filePath options:textureLoaderOptions error:&theError];
@@ -231,7 +232,7 @@ GLfloat gCubeVertexData[60] =
     glBindTexture(spriteTexture0.target, spriteTexture0.name);
     if((err = glGetError())){NSLog(@"GL Error = %u", err);}
     
-    filePath = [[NSBundle mainBundle] pathForResource:@"mustang" ofType:@"bmp"];
+    filePath = [[NSBundle mainBundle] pathForResource:@"mon1_sprite" ofType:@"png"];
     
     //NSLog(@"filepath: %@", filePath);
     glActiveTexture(GL_TEXTURE1);

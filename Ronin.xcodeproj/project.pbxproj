@@ -34,6 +34,8 @@
 		5AF5E2AE1A3A133300E733DA /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2AD1A3A133300E733DA /* grass.png */; };
 		5AF5E2B21A3A33B700E733DA /* Hero.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B01A3A33B700E733DA /* Hero.fsh */; };
 		5AF5E2B31A3A33B700E733DA /* Hero.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B11A3A33B700E733DA /* Hero.vsh */; };
+		5AF5E2B51A3A7B4C00E733DA /* mon1_sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B41A3A7B4C00E733DA /* mon1_sprite.png */; };
+		5AF5E2B71A3A7C1200E733DA /* mon1_sprite_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AF5E2B61A3A7C1200E733DA /* mon1_sprite_0.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +90,8 @@
 		5AF5E2AF1A3A2B4900E733DA /* samurai.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = samurai.h; sourceTree = "<group>"; };
 		5AF5E2B01A3A33B700E733DA /* Hero.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Hero.fsh; path = Shaders/Hero.fsh; sourceTree = "<group>"; };
 		5AF5E2B11A3A33B700E733DA /* Hero.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Hero.vsh; path = Shaders/Hero.vsh; sourceTree = "<group>"; };
+		5AF5E2B41A3A7B4C00E733DA /* mon1_sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mon1_sprite.png; sourceTree = "<group>"; };
+		5AF5E2B61A3A7C1200E733DA /* mon1_sprite_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mon1_sprite_0.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +154,8 @@
 				5A1EB0551A34D37200DBD03B /* Main.storyboard */,
 				5A1EB0581A34D37200DBD03B /* Images.xcassets */,
 				5A1EB05A1A34D37200DBD03B /* LaunchScreen.xib */,
+				5AF5E2B61A3A7C1200E733DA /* mon1_sprite_0.png */,
+				5AF5E2B41A3A7B4C00E733DA /* mon1_sprite.png */,
 				5AF5E2AD1A3A133300E733DA /* grass.png */,
 				5AF5E2981A38043C00E733DA /* watercolor_texture_bw.png */,
 				5AF5E29C1A392DED00E733DA /* watercolor_texture_bw_square.png */,
@@ -285,6 +291,7 @@
 			files = (
 				5AF5E2AE1A3A133300E733DA /* grass.png in Resources */,
 				5A1EB05C1A34D37200DBD03B /* LaunchScreen.xib in Resources */,
+				5AF5E2B71A3A7C1200E733DA /* mon1_sprite_0.png in Resources */,
 				5AF5E2AB1A39876F00E733DA /* Background.vsh in Resources */,
 				5AF5E2971A3800CF00E733DA /* square.png in Resources */,
 				5AF5E2991A38043C00E733DA /* watercolor_texture_bw.png in Resources */,
@@ -300,6 +307,7 @@
 				5A1EB0511A34D37200DBD03B /* Shader.vsh in Resources */,
 				5AF5E2931A37AF7F00E733DA /* ChristmasPresent.png in Resources */,
 				5A1EB04F1A34D37200DBD03B /* Shader.fsh in Resources */,
+				5AF5E2B51A3A7B4C00E733DA /* mon1_sprite.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

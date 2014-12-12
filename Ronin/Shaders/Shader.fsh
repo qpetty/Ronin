@@ -18,7 +18,7 @@ void main()
 {
     lowp vec4 textColor = texture2D(uTextureMask0, texCoords0);
     
-    if (textColor != vec4(0.0, 0.0, 0.0, 1.0)) {
+    if (textColor == vec4(1.0, 1.0, 1.0, 1.0)) {
         textColor = texture2D(uTextureMask1, texCoords1) + colorVarying;
     }
     
